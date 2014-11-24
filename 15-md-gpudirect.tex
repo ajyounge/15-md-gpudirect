@@ -163,7 +163,7 @@ With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox Con
 
 \subsection{Cluster Configuration}
 
-Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potential for a more heterogenious deployment.  Each server is composed of 2 Intel Xeon E5-2670 v2 CPUs, 48GB of DDR3 memory, and Mellanox ConnectX-3 QDR Infiniband.  CPU sockets and memory are split evenly between the two NUMA nodes on each system. All InfiniBand adapters use a single Mellanox SwitchX QDR switch running an updated subnet manager for IPoIB functionality.   
+Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potential for a more heterogenious deployment.  Each server is composed of 2 Intel Xeon E5-2670 CPUs, 48GB of DDR3 memory, and Mellanox ConnectX-3 QDR Infiniband.  CPU sockets and memory are split evenly between the two NUMA nodes on each system. All InfiniBand adapters use a single Mellanox SwitchX QDR switch running an updated subnet manager for IPoIB functionality.   
 
 
 For these experiments, both the GPUs and Infiniband adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.  Each guest was allocated 20 GB of RAM and a full socket of 8 cores, and pinned to NUMA node 1 to ensure optimal hardware usage. While all VMs are capable of login via the InfiniBand IPoIB setup, a 1Gb Ethernet network was used for all management and login tasks.  
@@ -214,26 +214,20 @@ Again, the overhead of the virtualized configuration remains low across all conf
 
 
 
-
 % Compared to the base system's performance, we see overheads of 3.2\% and 0.6\% for the LJ and Rhodo benchmarks, respectively, when running 8 cores per GPU at experimental scale. 
 
 
 In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid
-simulation with 256K particles running under HOOMD.  HOOMD includes support for
-CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR
-implementation enables a further optimization by supporting RDMA for GPUDirect.
-From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and
-without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes
-achieve 98.5\% of the base system's performance.  The non-GPUDirect results
-achieve 98.4\% efficiency at 4 nodes.  Further, GPUDirect RDMA shows a clear advantage over the non-GPUDirect
-implementation, achieving a 9\% performance boost in both the native a
-virtualized experiments.
+simulation with 256K particles running under HOOMD.  HOOMD includes support for CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR implementation enables a further optimization by supporting RDMA for GPUDirect. From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes (32 cores) achieve 98.5\% of the base system's performance.  The non-GPUDirect results achieve 98.4\% efficiency at 4 nodes. These results indicate the virtualized HPC environment is able to support such complex workloads. While the effective testbed size is relatively small, it indicates that such workloads may scale equally well to hundreds or thousands of nodes. 
 
 \FIGURE{!htb}
   {images/hoomd.png}
   {1.0}
   {HOOMD LJ Performance with 256k Simulation}
   {F:HOOMD}
+
+
+With HOOMD, we also see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated preivously \cite{GPUDirect}, it is the author's beleif that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
 
 \section{Conclusion}
 
