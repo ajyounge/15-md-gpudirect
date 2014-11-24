@@ -21,7 +21,7 @@
 \input{tex/macros}
 
 
-\title{High Performance Molecular Dynamics in Cloud Infrastructure with SR-IOV and GPUDirect}
+\title{Supporting High Performance Molecular Dynamics in Virtualized Clusters using IOMMU, SR-IOV, and GPUDirect}
 \author{\IEEEauthorblockN{Andrew J. Younge}
 \IEEEauthorblockA{School of Informatics \& Computing\\
 Indiana University \\
@@ -66,11 +66,16 @@ At present we stand at the inevitable intersection between High Performance Comp
 
 Nevertheless, there exists a past notion that virtualization used in today's cloud infrastructure is inherently inefficient.  Historically, cloud infrastructure has also done little to provide the necessary advanced hardware capabilities that have become almost mandatory in supercomputers today, most notably advanced GPUs and high-speed, low-latency interconnects.  The result of these notions has hindered the use of virtualized environments for parallel computation, where performance must be paramount.
 
-A growing effort is currently underway that looks to systematically identify and reduce any overhea in virtualization technologies, so far with relative success \cite{Younge2011cloud, Lukoviak}.  To advance the placement of HPC application on virtual machines, new efforts are emerging foscusing specificaly on key HPC hardware. By leveraging new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now support the same common HPC hardware such as the latest Nvidia Tesla GPUs \cite{younge2014}  as well as QDR/FDR InfiniBand fabric\cite{panda}.  
+A growing effort is currently underway that looks to systematically identify and reduce any overhead in virtualization technologies, so far with relative success \cite{Younge2011cloud, Lukoviak}.  Thus, we see a consitantly diminishing overhead with virtualization, not only with traditional overheads \cite{} but also with HPC workloads.  While virtualization will almost always include some additionaly overhead in relation to its dynamic abilities, the eventual goal for supporting HPC in virtualized environments  is to minimize any overhead wheneve rpossible.
+ 
+To advance the placement of HPC applications on virtual machines, new efforts are emerging foscusing specificaly on key HPC hardware. By leveraging new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now support the same common HPC hardware such as the latest Nvidia Tesla GPUs \cite{younge2014}  as well as InfiniBand fabric\cite{panda}.  
 
-Recent work recent work has focused on single-node performance.  In \cite{walters2014}, we've shown how the latest Kepler GPUs from Nvidia  with Sandy-Bridge Intel Xeon CPUs can perform at near-native performance running various workloads across wide range of hypervisors. Furthermore, advanced configuration of SR-IOV enabled Infiniband fabric has taken shape, with recent research showing up to a 30\% reduction latency \cite{musleh2014}.  
 
-Recent advances in hypervisor performance  \cite{Younge2011cloud} coupled with the newfound availably of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we see can see the formation of a high performance cloud infrastructure. While our previous advances in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate at scale. To start, we demonstrate running two molecular dynamics simulations, LAMMPS and HOOMD, in a virtual infrastructure complete with both Kepler GPUs and QDR InfiniBand.  Both LHOOMD and LAMMPS are used extensively in some of the world's fastest supercomputers and represent a key simulation example that HPC supports today.  
+Recent advances in hypervisor performance  \cite{Younge2011cloud} coupled with the newfound availably of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we see can see the formation of a high performance cloud infrastructure. While our previous advances in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate at scale. 
+
+To start, we demonstrate running two molecular dynamics simulations, LAMMPS and HOOMD, in a virtual infrastructure complete with both Kepler GPUs and QDR InfiniBand.  Both LHOOMD and LAMMPS are used extensively in some of the world's fastest supercomputers and represent a key simulation example that HPC supports today.  We show that these applications are able to run at near-native speeds within a completely virtualized environment, demonstrating small performance impacts usually acceptable by many users. Furthermore, we illustrate the ability of such a virtualized environment to support cuttinge edge software tools such as RDMA GPUDirect, demonstrating cutting-edge technologies are indeed possible in a virtualized environment. 
+
+Following these efforts, we hope to ensure upstream infrastructure projects such as OpenStack \cite{www-openstack} are able to make effective and quick use of these features, allowing users to build private cloud infrastructure to support high performance distributed computational workloads. 
 
 %Furthermore, the tighet and exact integration into an open source Cloud infrastructure framework such as OpenStack also becomes a critical next step.  
 
@@ -86,30 +91,32 @@ Recent advances in hypervisor performance  \cite{Younge2011cloud} coupled with t
 %* In this work we demonstrate two molecular dynamics simuations running in a virtual infrastructure: LAMMPS and  HOOMD \\
 %* We show that both perform near-native, and we show GPU Direct RDMA for the first time in the cloud \\
 
-\section{Background and Related Work}
+\section{Related Work}
 
-%Virtualized and cloud-based HPC has been extensively studied with mixed results~\cite{Younge2011cloud}.  However, hypervisor advances, and recent hardware support for virtualization, suggest that additional study is needed. 
+NOTE: first introduce virtualization, and I/O featuresets. Then enable GPUs. Then bring in SR-IOv and infiniBand. Finally, discuss applications and GPUDirect.
+
+Virtualized and cloud-based HPC has been extensively studied with mixed results~\cite{Younge2011cloud}.  However, hypervisor advances, and recent hardware support for virtualization, suggest that additional study is needed. 
 
 Nvidia GPUs comprise the single most common accelerator in the June 2014 Top 500 List.  In previous work, we have shown that GPUs achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI passthrough \cite{Walters2014cloud}.  This work demonstrated PCI passthrough performance across a range of hypervisors and GPUs, but was limited to single node performance.  Similarly, Infiniband SR-IOV (Single Root I/O Virtualization) has been evaluated within the context of microbenchmarks~\cite{SRIOVInfiniband,Musleh2014cloud}, but performance for real applications is not yet well-understood.
+
+%moved to related work. right placement?
+Recent work recent work has focused on single-node performance.  In \cite{walters2014}, we've shown how the latest Kepler GPUs from Nvidia  with Sandy-Bridge Intel Xeon CPUs can perform at near-native performance running various workloads across wide range of hypervisors. Furthermore, advanced configuration of SR-IOV enabled Infiniband fabric has taken shape, with recent research showing up to a 30\% reduction latency \cite{musleh2014}.  
+
 
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment.  For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads including MD simulations, but also that the latest HPC features and programming environments are also available in this same model.  
 
 
-\section{Results}
+\section{Experimental Setup}
 
 Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs.  Each server is composed of 2 Intel Xeon E5-2670 CPUs, 48GB of DDR3 memory, and Mellanox ConnectX-3 QDR Infiniband.  CPU sockets and memory are split evenly between two NUMA nodes.  For these experiments, both the GPUs and Infiniband adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.   
 
-%CentOS 6.4 with a 3.13 upstream Linux kernel was used as the host OS with the
-%KVM hypervisor.  The native bare-metal base system and all guest VMs are
-%composed of a CentOS 6.4 installation with a 2.6.32-358.23.2 stock kernel,
-%MVAPICH 2.0 GDR, and CUDA version 5.5. Each guest was allocated 20 GB of RAM and
-%a full socket (8 cores) as well as a single InfiniBand virtual function  and 1 Kepler GPU per VM.  
+CentOS 6.4 with a 3.13 upstream Linux kernel was used as the host OS with the KVM hypervisor.  The native bare-metal base system and all guest VMs are composed of a CentOS 6.4 installation with a 2.6.32-358.23.2 stock kernel, MVAPICH 2.0 GDR, and CUDA version 5.5. Each guest was allocated 20 GB of RAM and a full socket (8 cores) as well as a single InfiniBand virtual function  and 1 Kepler GPU per VM.  
+
+In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  While the effective experimental hardware allocation remains relatively low compared to production runs of either application, it does allow for a useful evaluation at a larger scale than preivously evaluated as well as a valued extrapolation to larger resources.
+ 
+\section{Results}
 
 
-
-%In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  
-
-% Not enough room. 
 
 \FIGURE{!htb}
   {images/lammps.png}
