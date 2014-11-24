@@ -1,4 +1,23 @@
-\subsection{Benchmarks}
+\subsection{GPUDirect}
+NVIDIA's GPUDirect technology was introduced to reduce the overhead of data
+movement across GPUs~\cite{GPUDirect}.  GPUDirect supports both networking as
+well as peer-to-peer interfaces for single node multi-GPU systems.  The most
+recent implementation of GPUDirect, version 3, adds support for RDMA over
+InfiniBand for Kepler-class GPUs. 
+
+The networking component of GPUDirect relies on three key technologies: CUDA 5
+(and up), a CUDA-enabled MPI implementation, and a Kepler-class GPU (RDMA only).
+Both MVAPICH and OpenMPI support GPUDirect.  Support for RDMA over GPUDirect is
+enabled by the MPI library, given supported hardware, and does not depend on
+application-level changes to a user's code.  
+
+In this paper, our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA
+support.  We demonstrate scaling for up to 4 nodes connected via QDR InfiniBand
+and show that GPUDirect RDMA improves both scalability and overall performance
+by approximately 9\% at no cost to the end user.
+
+
+\section{Benchmarks}
 We selected two molecular dynamics applications for evaluation in this study:
 LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These
 applications were chosen due to their general interest to the HPC community, as
@@ -17,9 +36,9 @@ RDMA is used for these experiments.
 \paragraph{HOOMD-blue} The Highly Optimized Object-oriented Many-particle
 Dyanmics -- Blue Edition is a particle dynamics simualtor capable of
 scaling into the thousands of GPUs.  HOOMD supports executing on both CPUs and
-GPUs.  Unlike LAMMPS, however, HOOMD is homogeneous and does not support mixing
-of the two.  Like LAMMPS, HOOMD is MPI-based, however, HOOMD supports
-GPUdirect by using a CUDA-enabled MPI.  In this paper we focus on HOOMD's
+GPUs.  Unlike LAMMPS, HOOMD is homogeneous and does not support mixing
+of GPUs and CPUs.  HOOMD supports GPUdirect using a CUDA-enabled MPI.
+In this paper we focus on HOOMD's
 support for GPUdirect and show its benefits for increasing cluster sizes.  
 
 
