@@ -108,7 +108,11 @@ With PCI Passthrough, a PCI device is handed directly to a running (or booting) 
 
 \subsection{GPU Passthrough}
 
-Nvidia GPUs comprise the single most common accelerator in the Nov 2014 Top 500 List \cite{top500} and represent an increasing shift towards accelerators for HPC applications. Recently efforts have been seen to support such GPU accelerators directly within VMs using IOMMU technologies, with implementations now available with KVM \cite{walters2014cloud}, Xen \cite{Younge2013hpgc} and VMWare \cite{Vu2014}.  These efforts have shown that GPUs can achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI passthrough \cite{Walters2014cloud}.  These works demonstrate PCI passthrough performance across a range of hypervisors and GPUs, but were limited to single node performance. 
+Nvidia GPUs comprise the single most common accelerator in the Nov 2014 Top 500
+List \cite{top500} and represent an increasing shift towards accelerators for
+HPC applications. Recently efforts have been seen to support such GPU
+accelerators directly within VMs using IOMMU technologies, with implementations
+now available with KVM \cite{Walters2014cloud}, Xen \cite{Younge2013hpgc} and VMWare \cite{Vu2014}.  These efforts have shown that GPUs can achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI passthrough \cite{Walters2014cloud}.  These works demonstrate PCI passthrough performance across a range of hypervisors and GPUs, but were limited to single node performance. 
 
 \subsection{SR-IOV and InfiniBand}
 
