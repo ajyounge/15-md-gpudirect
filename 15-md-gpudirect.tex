@@ -91,22 +91,32 @@ Following these efforts, we hope to ensure upstream infrastructure projects such
 %* In this work we demonstrate two molecular dynamics simuations running in a virtual infrastructure: LAMMPS and  HOOMD \\
 %* We show that both perform near-native, and we show GPU Direct RDMA for the first time in the cloud \\
 
-\section{Related Work}
+\section{Background and Related Work}
 
 NOTE: first introduce virtualization, and I/O featuresets. Then enable GPUs. Then bring in SR-IOv and infiniBand. Finally, discuss applications and GPUDirect.
 
-Virtualized and cloud-based HPC has been extensively studied with mixed results~\cite{Younge2011cloud}.  However, hypervisor advances, and recent hardware support for virtualization, suggest that additional study is needed. 
+Virtualization technologies and hypervisors have been seen widespread deployment in support of a vast array of applications.  This ranges from public commercial Cloud deployments such as Amazon EC2 \cite{www-ec2}, Microsoft Azure, and Google's Cloud Platform \cite{www-google-cloud} to private deployments within colocation facilities, corporate data centers, and even national scale cyberinfrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
 
-Nvidia GPUs comprise the single most common accelerator in the June 2014 Top 500 List.  In previous work, we have shown that GPUs achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI passthrough \cite{Walters2014cloud}.  This work demonstrated PCI passthrough performance across a range of hypervisors and GPUs, but was limited to single node performance.  Similarly, Infiniband SR-IOV (Single Root I/O Virtualization) has been evaluated within the context of microbenchmarks~\cite{SRIOVInfiniband,Musleh2014cloud}, but performance for real applications is not yet well-understood.
+The use of virtualization and hypervisors specifically support various HPC solutions has been studied with mixed results.  In ~\cite{Younge2011cloud}, it is found that there is a great deal of variance between hypervisors when running various distributed memory and MPI applications, finding that KVM overall performed well across an array of HPC benchmarks.  Furthermore, some applications may not may well into default virtualized evnironments, such as High Performance Linpack \cite{piotr-2011-utk}.  
+
+\subsection{I/O Virtualization}
+
+Recently, various CPU architectures have added support for I/O virtualization mechanisms directly in the CPU ISA through the use of an I/O memory management unit (IOMMU). Often, this is referred to as PCI Passthrough, as it enabled devices on the PCI-Express bus to be passed directly to a specific virtual machine (VM).  Specific hardware implementations include Intel's VT-d \cite{intel-vtd}, AMD's IOMMU \cite{amdiommu} from x86_64 architectures, and even more recently ARM System MMU \cite{arm-systemmmu}.  All of these implementations effectively look to aid in the usage of DMA-capable hardware to be used within a specific virtual machine. Using these features, a wide array of hardware can be utilized directly within VMs and enable fast and efficient computation and I/O capabilities. 
+
+Nvidia GPUs comprise the single most common accelerator in the Nov 2014 Top 500 List \cite{top500} and represent an increasing shift towards accelerators for HPC applications. Recently efforts have been seen to support such GPU accelerators directly within VMs using IOMMU technologies, with implementations now available with KVM \cite{walters2014cloud}, Xen \cite{Younge2013hpgc} and VMWare \cite{Vu2014}.  These efforts have shown that GPUs can achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI passthrough \cite{Walters2014cloud}.  These works demonstrated PCI passthrough performance across a range of hypervisors and GPUs, but was limited to single node performance.  
+
+Similarly, Infiniband SR-IOV (Single Root I/O Virtualization) has been evaluated within the context of microbenchmarks~\cite{SRIOVInfiniband,Musleh2014cloud}, but performance for real applications is not yet well-understood.
 
 %moved to related work. right placement?
 Recent work recent work has focused on single-node performance.  In \cite{walters2014}, we've shown how the latest Kepler GPUs from Nvidia  with Sandy-Bridge Intel Xeon CPUs can perform at near-native performance running various workloads across wide range of hypervisors. Furthermore, advanced configuration of SR-IOV enabled Infiniband fabric has taken shape, with recent research showing up to a 30\% reduction latency \cite{musleh2014}.  
 
 
+
+\section{Application and Experimental Setup}
+
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment.  For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads including MD simulations, but also that the latest HPC features and programming environments are also available in this same model.  
 
 
-\section{Experimental Setup}
 
 Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs.  Each server is composed of 2 Intel Xeon E5-2670 CPUs, 48GB of DDR3 memory, and Mellanox ConnectX-3 QDR Infiniband.  CPU sockets and memory are split evenly between two NUMA nodes.  For these experiments, both the GPUs and Infiniband adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.   
 
