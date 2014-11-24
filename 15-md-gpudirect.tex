@@ -133,7 +133,7 @@ Recently SR-IOV support for InfiniBand has been added by Mellanox in the Connect
 
 
 
-\section{Application and Experimental Setup}
+\section{Experimental Setup}
 
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment. 
 
@@ -174,30 +174,47 @@ For a fair and effective comparison, we also use a native environment without an
 
 %In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  While the effective experimental hardware allocation remains relatively low compared to production runs of either application, it does allow for a useful evaluation at a larger scale than preivously evaluated as well as a valued extrapolation to larger resources.
 
-\subsection{Molecular Dynamics Applications}
-
-JP to provide MD application descriptions and configurations
  
 \section{Results}
 
-In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores, both in native and virtualized environments. 
+In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores and 4 GPUs, both in native and virtualized environments.  Each application set was run 10 times, with the results averaged accordingly. 
 
+\subsection{LAAMPS}
+
+
+Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, or a 8:1 core to GPU mapping.  With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity of SIMD CPU computation.  However, as expected the multi-core configuration quickly outperforms the former for higher problem sizes, achieving roughly twice the performance with all 8 available cores keeping the GPU busy with work. 
+
+Performance of the virtualized environment performs very well compared to the best-case native deployment. For the multi-core configuration across all problem sizes, the virtualized deployment averaged 98.5\% efficiency compared to native. The single core per GPU deployment reported better-than native performance at 100\% native. 
+
+ %and the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), both running with the GPU package across 8 cores per GPU. Here we see that both benchmarks scale remarkably well in the virtualized KVM guest environment. 
+%Compared to the base system performance, the VMs running LAMMPs acheive 96.7\% and 99.3\% efficiency for LJ and Rhodo, respectively when running across all nodes.  These low overheads illustrate the utility of running LAMPS on cloud infrastructure, and also hold promise for other hybrid MPI + CUDA applications to also scale well in a virtualized environment. 
 
 \FIGURE{!htb}
-  {images/lammps.png}
+  {images/lammps-lj-scale.png}
   {1.0}
-  {LAMMPS RHODO \& LJ Performance}
-  {F:lammps}
+  {LAMMPS LJ Performance}
+  {F:lammps-lj}
 
+
+Another common LAMMPs algoirthms, the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo) was also run with results given in Figure \ref{F:lammps-rhodo}. As with the LJ runs, we see the multi-core to GPU configuration resulting in higher computational performance for the larger problem sizes compared to the single core per GPU configuration.  
 
 \FIGURE{!htb}
-  {images/hoomd.png}
+  {images/lammps-rhodo-scale.png}
   {1.0}
-  {HOOMD LJ Performance with 256k Simulation}
-  {F:HOOMD}
+  {LAMMPS RHODO Performance}
+  {F:lammps-rhodo}
 
-Figure~\ref{F:lammps} shows two of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ) and the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), both running with the GPU package across 8 cores per GPU. Here we see that both benchmarks scale remarkably well in the virtualized KVM guest environment. 
-Compared to the base system performance, the VMs running LAMMPs acheive 96.7\% and 99.3\% efficiency for LJ and Rhodo, respectively when running across all nodes.  These low overheads illustrate the utility of running LAMPS on cloud infrastructure, and also hold promise for other hybrid MPI + CUDA applications to also scale well in a virtualized environment. 
+Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% effiency compared to native. Interestingly enough, we also see the performance gap decrease as the problem size increases, with the 512k problem size in yielding 99.3\% of native performance.
+
+
+
+
+\subsection{HOOMD}
+
+
+
+
+
 % Compared to the base system's performance, we see overheads of 3.2\% and 0.6\% for the LJ and Rhodo benchmarks, respectively, when running 8 cores per GPU at experimental scale. 
 
 
@@ -212,7 +229,11 @@ achieve 98.4\% efficiency at 4 nodes.  Further, GPUDirect RDMA shows a clear adv
 implementation, achieving a 9\% performance boost in both the native a
 virtualized experiments.
 
-
+\FIGURE{!htb}
+  {images/hoomd.png}
+  {1.0}
+  {HOOMD LJ Performance with 256k Simulation}
+  {F:HOOMD}
 
 \section{Conclusion}
 
