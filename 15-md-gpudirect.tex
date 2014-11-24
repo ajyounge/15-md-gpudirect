@@ -148,7 +148,7 @@ For the first time, we also demonstrate Nvidia GPUDirect technology within such 
 To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact configuration is needed. This node configuration is illustrated in figure \ref{F:passthrough}, and while our implementation is specific to KVM, this setup represents a design that can be hypervisor agnostic.
 
 \FIGURE{!htb}
-  {images/host-pci-passthrough.pdf}
+  {images/host-pci-passthrough.png}
   {1.0}
   {LAMMPS RHODO \& LJ Performance}
   {F:passthrough}
@@ -231,11 +231,23 @@ simulation with 256K particles running under HOOMD.  HOOMD includes support for 
   {F:HOOMD}
 
 
-With HOOMD, we also see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated preivously \cite{GPUDirect}, it is the author's beleif that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
+\section{Discussion}
+
+Discuss how very high efficiency and low overhead these results are
+
+State this looks to scale well, and that we want to use larger hardware (FutureGrid, SDSC Comet) in the future.
+
+Discuss integration into OpenStack via PCI-Passthrough of GPUs (done) as well as InfiniBand integration (somewhat done, working on it for SR-IOV), Mellanox Neutron plugin. 
+
+Discuss GPU direct novelty.
+
+With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated preivously \cite{GPUDirect}, it is the author's beleif that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
+
+
 
 \section{Conclusion}
 
-With the advent of cloud infrastructure, the ability to run large-scale parallel scientific applications has become possible but limited due to both performance and hardware availability issues. In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPs and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud Infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  %Efforts are also underway to leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework such as OpenStack.  
+With the advent of cloud infrastructure, the ability to run large-scale parallel scientific applications has become possible but limited due to both performance and hardware availability issues. In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPs and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud Infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  Efforts are also underway to leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework such as OpenStack.  
 
 
 
