@@ -229,17 +229,13 @@ simulation with 256K particles running under HOOMD.  HOOMD includes support for 
 
 \section{Discussion}
 
-Discuss how very high efficiency and low overhead these results are
+From the results, we see the potential for running HPC applications in a virtualized environment using GPUs and InfiniBand interconnect fabric. Across all LAAMPS runs with raning core configurations, we found only a 1.9\% overhead between the KVM virtualized environment and native. For HOOMD, we found a similar 1.5\% overhead, both with and without GPU Direct. These results go against conventional wisdom that HPC workloads do not work in VMs. In fact ,we show two N-Body type simulations programmed in an MPI+CUDA implementation perform at roughly near-native performance in tuned KVM virtual machines.  
 
-State this looks to scale well, and that we want to use larger hardware (FutureGrid, SDSC Comet) in the future.
+With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated preivously \cite{GPUDirect}, it is the author's belief that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
 
-Discuss integration into OpenStack via PCI-Passthrough of GPUs (done) as well as InfiniBand integration (somewhat done, working on it for SR-IOV), Mellanox Neutron plugin. 
+Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, we find the overhead does not increase. this lends credence to the idea that such a solution would also work for a much larger deployment. Specifically, it would be possible to ramp up a similar deployment in FutureGrid \cite{www-futuregrid} or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results support the theory that a majority of HPC computations can be supported in virtualized environment. 
 
-Discuss GPU direct novelty.
-
-With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated preivously \cite{GPUDirect}, it is the author's beleif that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
-
-
+TODO: Discuss integration into OpenStack via PCI-Passthrough of GPUs (done) as well as InfiniBand integration (somewhat done, working on it for SR-IOV), Mellanox Neutron plugin. Describe possibility of a virtual cluster (keyword).  
 
 \section{Conclusion}
 
