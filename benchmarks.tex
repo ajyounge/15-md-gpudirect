@@ -1,1 +1,25 @@
 \subsection{Benchmarks}
+We selected two molecular dynamics applications for evaluation in this study:
+LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These
+applications were chosen due to their general interest to the HPC community, as
+well as their different communications models, described below.
+
+\paragraph {LAMMPS} The Large-scale Atomic/Molecular Parallel Simulator is a
+well-understood highly parallel molecular dynamics simulator.  It supports both
+CPU and GPU-based workloads.  Unlike many simulators, both MD and otherwise,
+LAMMPS is heterogeneous.  It will use both GPUs and multicore CPUs concurrently.
+For this study, this heterogeneous functionality introduces additional load on
+the host, allowing LAMMPS to utilize all available cores on a given system.
+Networking in LAMMPS is accomplished using a typical MPI model. That is, data is
+copied from the GPU back to the host and sent over the InfiniBand fabric.  No
+RDMA is used for these experiments.  
+
+\paragraph{HOOMD-blue} The Highly Optimized Object-oriented Many-particle
+Dyanmics -- Blue Edition is a particle dynamics simualtor capable of
+scaling into the thousands of GPUs.  HOOMD supports executing on both CPUs and
+GPUs.  Unlike LAMMPS, however, HOOMD is homogeneous and does not support mixing
+of the two.  Like LAMMPS, HOOMD is MPI-based, however, HOOMD supports
+GPUdirect by using a CUDA-enabled MPI.  In this paper we focus on HOOMD's
+support for GPUdirect and show its benefits for increasing cluster sizes.  
+
+
