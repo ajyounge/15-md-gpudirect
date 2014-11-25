@@ -90,7 +90,14 @@ A growing effort is currently underway that looks to systematically identify and
 
 With the advances in hypervisor performance coupled with the newfound availably of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we see can see the possibility of a high performance cloud infrastructure using virtualization. While our previous efforts in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate in distributed environments as found in today's cluster and cloud infrastructures. 
 
-To start, we demonstrate running two molecular dynamics simulations, LAMMPS and HOOMD, in a virtual infrastructure complete with both Kepler GPUs and QDR InfiniBand.  Both LHOOMD and LAMMPS are used extensively in some of the world's fastest supercomputers and represent example simulations that HPC supports today.  We show that these applications are able to run at near-native speeds within a completely virtualized environment, demonstrating just small performance impacts that are usually acceptable by many users. Furthermore, we illustrate the ability of such a virtualized environment to support cutting edge software tools such as RDMA GPUDirect, illustrating how cutting-edge HPC technologies are also possible in a virtualized environment. 
+We begin by describing a heterogeneous cloud platform, based on OpenStack. This
+effort has been under development at USC/ISI since 2011~\cite{crago2011heterogeneous}.
+We describe our work towards integrating GPU and InfiniBand support into
+OpenStack, and we describe the heterogeneous scheduling additions that are
+necessary to support not only attached accelerators, but any cloud composed of
+heteogeneous elements.  
+
+We then demonstrate running two molecular dynamics simulations, LAMMPS and HOOMD, in a virtual infrastructure complete with both Kepler GPUs and QDR InfiniBand.  Both HOOMD and LAMMPS are used extensively in some of the world's fastest supercomputers and represent example simulations that HPC supports today.  We show that these applications are able to run at near-native speeds within a completely virtualized environment, demonstrating just small performance impacts that are usually acceptable by many users. Furthermore, we illustrate the ability of such a virtualized environment to support cutting edge software tools such as RDMA GPUDirect, illustrating how cutting-edge HPC technologies are also possible in a virtualized environment. 
 
 Following these efforts, we hope to ensure upstream infrastructure projects such as OpenStack \cite{www-openstack, pepple2011deploying} are able to make effective and quick use of these features, allowing users to build private cloud infrastructure to support high performance distributed computational workloads. 
 
