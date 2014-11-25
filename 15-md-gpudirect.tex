@@ -218,7 +218,14 @@ With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox Con
 
 \subsection{Cluster Configuration}
 
-Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potential for a more heterogeneous deployment.  Each server is composed of 2 Intel Xeon E5-2670 CPUs, 48GB of DDR3 memory, and Mellanox ConnectX-3 QDR InfiniBand.  CPU sockets and memory are split evenly between the two NUMA nodes on each system. All InfiniBand adapters use a single Mellanox SwitchX QDR switch running an updated subnet manager for IPoIB functionality.   
+Our test environment is composed of 4 servers each with a single Nvidia
+Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two
+servers are equipped with K40 GPUs, demonstrating the potential for a more
+heterogeneous deployment.  Each server is composed of 2 Intel Xeon E5-2670 CPUs,
+48GB of DDR3 memory, and Mellanox ConnectX-3 QDR InfiniBand.  CPU sockets and
+memory are split evenly between the two NUMA nodes on each system. All
+InfiniBand adapters use a single Voltaire 4036 QDR switch with a software subnet
+manager for IPoIB functionality.   
 
 
 For these experiments, both the GPUs and InfiniBand adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.  Each guest was allocated 20 GB of RAM and a full socket of 8 cores, and pinned to NUMA node 1 to ensure optimal hardware usage. While all VMs are capable of login via the InfiniBand IPoIB setup, a 1Gb Ethernet network was used for all management and login tasks.  
