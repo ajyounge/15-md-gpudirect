@@ -136,6 +136,26 @@ SR-IOV has been used in conjunction with Ethernet devices to provide high perfor
 
 Recently SR-IOV support for InfiniBand has been added by Mellanox in the ConnectX series adapters. Initial evaluation of SR-IOV InfiniBand within KVM VMs has proven has found point-to-point bandwidth to be near-native, but up to 30\% latency overhead for very small messages \cite{jose2013sr, RuivoAGTKNR14}. However, even with the noted overhead, this still signifies up to an order of magnitude difference in latency between InfiniBand and Ethernet with VMs. Furthermore, advanced configuration of SR-IOV enabled InfiniBand fabric is taking shape, with recent research showing up to a 30\% reduction in the latency overhead \cite{Musleh2014cloud}. However, real application performance has not yet been well understood until now. 
 
+\subsection{GPUDirect}
+NVIDIA's GPUDirect technology was introduced to reduce the overhead of data
+movement across GPUs~\cite{GPUDirect, shainer2011development}.  GPUDirect
+supports both networking as
+well as peer-to-peer interfaces for single node multi-GPU systems.  The most
+recent implementation of GPUDirect, version 3, adds support for RDMA over
+InfiniBand for Kepler-class GPUs.
+
+The networking component of GPUDirect relies on three key technologies: CUDA 5
+(and up), a CUDA-enabled MPI implementation, and a Kepler-class GPU (RDMA only).
+Both MVAPICH and OpenMPI support GPUDirect.  Support for RDMA over GPUDirect is
+enabled by the MPI library, given supported hardware, and does not depend on
+application-level changes to a user's code.
+
+In this paper, our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA
+support.  We demonstrate scaling for up to 4 nodes connected via QDR InfiniBand
+and show that GPUDirect RDMA improves both scalability and overall performance
+by approximately 9\% at no cost to the end user.
+
+\input{openstack}
 
 \input{benchmarks}
 
@@ -245,8 +265,6 @@ From the results, we see the potential for running HPC applications in a virtual
 With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated previously \cite{GPUDirect}, it is the author's belief that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
 
 Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, the overhead does not increase. These results lend credence to the notion that this solution would also work for a much larger deployment. Specifically, it would be possible to expand such computational problems to a larger deployment in FutureGrid \cite{fox2013futuregrid}, Chameleon Cloud \cite{www-chameleon}, or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results help support the theory that a majority of HPC computations can be supported in virtualized environment with minimal overhead. 
-
-\input{openstack}
 
 
 \section{Conclusion}
