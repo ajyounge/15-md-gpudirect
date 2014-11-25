@@ -18,10 +18,16 @@ by approximately 9\% at no cost to the end user.
 
 
 \section{Benchmarks}
-We selected two molecular dynamics applications for evaluation in this study:
-LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These
-applications were chosen due to their general interest to the HPC community, as
-well as their different communications models, described below.
+We selected two molecular dynamics (MD) applications for evaluation in this study:
+LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These MD siulations are chosen to represent a subset of advance parallel computation for a number of fundamental reasons:
+
+\begin{itemize}
+\item MD simulations provide a good practical representation of N-Body simulations, which is one of the major computational \emph{Dwarfs} \cite{asanovic2006landscape} in parallel and distributed computing. 
+\item MD simulations are one of the most widely deployed applications on large scale supercomputers today.
+\item Many MD simulations have a hybrid MPI+CUDA programming model, which has often become commonplace in HPC as the use of accelerators increases.
+\end{itemize}
+
+As such, we look to LAMMPS and HOOMD to provide a real-world example for running cutting-edge parallel programs on virtualized infrastructure. While these applications by no means represent all parallel scientific computing efforts (as justified by the 13 Drafs defined in \cite{asanovic2006landscape}), we hope these MD simulators offer a more pragmatic viewpoint than traditional synthetic HPC benchmarks such as High Performance Linpack. 
 
 \paragraph {LAMMPS} The Large-scale Atomic/Molecular Parallel Simulator is a
 well-understood highly parallel molecular dynamics simulator.  It supports both
