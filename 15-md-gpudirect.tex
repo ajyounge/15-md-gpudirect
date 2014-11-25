@@ -157,16 +157,16 @@ For the first time, we also demonstrate Nvidia GPUDirect technology within such 
 
 \subsection{Node configuration}
 
-To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact configuration is needed. This node configuration is illustrated in figure \ref{F:passthrough}, and while our implementation is specific to KVM, this setup represents a design that can be hypervisor agnostic.
+To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
 
 \FIGURE{!htb}
   {images/host-pci-passthrough.png}
   {1.0}
-  {LAMMPS RHODO \& LJ Performance}
+  {Node PCI Passthrough of GPUs and InfiniBand}
   {F:passthrough}
 
 
-Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel was used as the host OS, along with the KVM hypervisor and the vfio driver. 
+Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor and the vfio driver. 
 Each Guest VM runs Centos 6.4 with a stock 2.6.32-358.23.2 kernel.
 A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirris VGA was emulated in the guest OS. 
 
@@ -193,7 +193,7 @@ For a fair and effective comparison, we also use a native environment without an
  
 \section{Results}
 
-In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores and 4 GPUs, both in native and virtualized environments.  Each application set was run 10 times, with the results averaged accordingly. 
+In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores and 4 GPUs, both in a native bare-metal and virtualized environments.  Each application set was run 10 times, with the results averaged accordingly. 
 
 \subsection{LAAMPS}
 
@@ -204,15 +204,15 @@ In this section, we discuss the performance of both the LAMMPS and HOOMD molecul
   {F:lammps-lj}
 
 
-Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, or a 8:1 core to GPU mapping.  With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity of SIMD CPU computation.  However, as expected the multi-core configuration quickly outperforms the former for higher problem sizes, achieving roughly twice the performance with all 8 available cores keeping the GPU busy with work. 
-
-Performance of the virtualized environment performs very well compared to the best-case native deployment. For the multi-core configuration across all problem sizes, the virtualized deployment averaged 98.5\% efficiency compared to native. The single core per GPU deployment reported better-than native performance at 100\% native. 
+Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, and a 8:1 core to GPU mapping.  With the LAMMPS GPU implementation, a delicate balance between GPUs and CPUs is required to find the optimal ratio for fastest computation, however here we just look at the two most obvious choices. With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity provided with multi-core solution.  As expected the multi-core configuration quickly offers better performance for larger problem sizes, achieving roughly twice the performance with all 8 available cores. This is largely due to the availability of all 8 cores to keep the GPU running 100\% with continual computation.
+ 
+The important factor for this manuscript is the relative performance of the virtualized environment. From the results, it is clear the VM solution performs very well compared to the best-case native deployment. For the multi-core configuration across all problem sizes, the virtualized deployment averaged 98.5\% efficiency compared to native. The single core per GPU deployment reported better-than native performance at 100\% native.  This is likely due to caching effects, but further investigation is needed to fully identify this occurrence. 
 
  %and the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), both running with the GPU package across 8 cores per GPU. Here we see that both benchmarks scale remarkably well in the virtualized KVM guest environment. 
 %Compared to the base system performance, the VMs running LAMMPs acheive 96.7\% and 99.3\% efficiency for LJ and Rhodo, respectively when running across all nodes.  These low overheads illustrate the utility of running LAMPS on cloud infrastructure, and also hold promise for other hybrid MPI + CUDA applications to also scale well in a virtualized environment. 
 
 
-Another common LAMMPs algorithms, the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo) was also run with results given in Figure \ref{F:lammps-rhodo}. As with the LJ runs, we see the multi-core to GPU configuration resulting in higher computational performance for the larger problem sizes compared to the single core per GPU configuration.  
+Another common LAMMPs algorithm, the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), was also run with results given in Figure \ref{F:lammps-rhodo}. As with the LJ runs, we see the multi-core to GPU configuration resulting in higher computational performance for the larger problem sizes compared to the single core per GPU configuration, as expected.  
 
 \FIGURE{!htb}
   {images/lammps-rhodo-scale.png}
@@ -220,9 +220,7 @@ Another common LAMMPs algorithms, the Rhodopsin protein in solvated lipid bilaye
   {LAMMPS RHODO Performance}
   {F:lammps-rhodo}
 
-Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% efficiency compared to native. Interestingly enough, we also see the performance gap decrease as the problem size increases, with the 512k problem size in yielding 99.3\% of native performance.
-
-
+Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% efficiency compared to native. Interestingly enough, we also see the performance gap decrease as the problem size increases, with the 512k problem size in yielding 99.3\% of native performance.  This finding leads us to extrapolate that a virtualized MPI+CUDA implementation would scale to a larger computational resource with similar success. 
 
 
 \subsection{HOOMD}
@@ -233,8 +231,7 @@ Again, the overhead of the virtualized configuration remains low across all conf
 % Compared to the base system's performance, we see overheads of 3.2\% and 0.6\% for the LJ and Rhodo benchmarks, respectively, when running 8 cores per GPU at experimental scale. 
 
 
-In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid
-simulation with 256K particles running under HOOMD.  HOOMD includes support for CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR implementation enables a further optimization by supporting RDMA for GPUDirect. From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes (32 cores) achieve 98.5\% of the base system's performance.  The non-GPUDirect results achieve 98.4\% efficiency at 4 nodes. These results indicate the virtualized HPC environment is able to support such complex workloads. While the effective testbed size is relatively small, it indicates that such workloads may scale equally well to hundreds or thousands of nodes. 
+In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid simulation with 256K particles running under HOOMD.  HOOMD includes support for CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR implementation enables a further optimization by supporting RDMA for GPUDirect. From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes (32 cores) achieve 98.5\% of the base system's performance.  The non-GPUDirect results achieve 98.4\% efficiency at 4 nodes. These results indicate the virtualized HPC environment is able to support such complex workloads. While the effective testbed size is relatively small, it indicates that such workloads may scale equally well to hundreds or thousands of nodes. 
 
 \FIGURE{!htb}
   {images/hoomd.png}
@@ -249,14 +246,14 @@ From the results, we see the potential for running HPC applications in a virtual
 
 With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDirect implementation, achieving a 9\% performance boost in both the native a virtualized experiments.  While GPU Direct's performance impact has been well evaluated previously \cite{GPUDirect}, it is the author's belief that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
 
-Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, we find the overhead does not increase. this lends credence to the idea that such a solution would also work for a much larger deployment. Specifically, it would be possible to ramp up a similar deployment in FutureGrid \cite{fox2013futuregrid} or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results support the theory that a majority of HPC computations can be supported in virtualized environment. 
+Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, the overhead does not increase. These results lend credence to the notion that this solution would also work for a much larger deployment. Specifically, it would be possible to expand such computational problems to a larger deployment in FutureGrid \cite{fox2013futuregrid}, Chameleon Cloud \cite{www-chameleon}, or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results help support the theory that a majority of HPC computations can be supported in virtualized environment with minimal overhead. 
 
 \input{openstack}
 
 
 \section{Conclusion}
 
-With the advent of cloud infrastructure, the ability to run large-scale parallel scientific applications has become possible but limited due to both performance and hardware availability issues. In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPs and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud Infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  Efforts are also underway to leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework such as OpenStack.  
+With the advent of cloud infrastructure, the ability to run large-scale parallel scientific applications has become possible but limited due to both performance and hardware availability issues. In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications such as molecular dynamics simulations run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPs and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud Infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  Efforts are also underway to leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework such as OpenStack.  
 
 
 
