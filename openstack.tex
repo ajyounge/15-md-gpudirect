@@ -1,5 +1,38 @@
 \section{A Cloud for High Performance Computing}
 With support for GPU passthrough, SR-IOV, and GPUDirect, we have the building
 blocks for a high performance, heterogeneous cloud.  In addition, other common
-accelerators (e.g. Xeon Phi~\cite{Phi}).
+accelerators (e.g. Xeon Phi~\cite{Phi}) have similarly been demonstrated in
+virtualized environments.  Our vision is of a heterogeneous cloud, supporting
+both high speed networking and accelerators for tightly coupled applications.
+
+To this end we have developed a heterogenous cloud based on
+OpenStack~\cite{www-openstack}.  In our previous work, we
+have demonstrated the ability to rapidly provision GPU, bare metal, and other
+heterogeneous resources within a single cloud~\cite{crago2011heterogeneous}.
+Building on this effort we have added support for GPU passthrough to OpenStack
+as well as SR-IOV support for both ConnectX-2 and ConnectX-3 Infiniband devices.
+Mellanox separately supports an OpenStack InfiniBand networking plugin for
+OpenStack's Neutron service~\cite{ML2}, however the Mellanox plugin depends on
+the ConnectX-3 adapter.  Our institutional requirements depend on ConnecteX-2
+SR-IOV support, requiring an independent implementation.
+
+OpenStack supports services for networking (Neutron), compute (Nova), identity
+(Keystone), storage (Cinder, Swift), and others.  Our work focuses entirely
+on the compute service.  
+
+Scheduling is implemented at two levels: the cloud-level and the node-level.  In
+our earlier work, we have developed a cloud-level heterogeneous scheduler for OpenStack,
+allowing scheduling based on architectures and
+resources~\cite{crago2011heterogeneous}.  In this model, the cloud-level
+scheduler dispatches jobs to nodes based on resource requirements (e.g. Kepler
+GPU) and node-level resource availability.
+
+At the node, a second level of scheduling occurs to ensure that resources are
+tracked and not overcommitted.  Unlike traditional cloud paradigms, devices
+passed into VMs cannot be overcommitted.  We treat devices, whether GPUs or
+InfiniBand virtual functions, as schedulable resources.  Thus, it is the responsibility of the
+individual node to track resources committed and report availability to the
+cloud-level scheduler.  For reporting, we piggyback on top of OpenStack's
+exisiting reporting mechanism to provide a low overhead solution.
+
 
