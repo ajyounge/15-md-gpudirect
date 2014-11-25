@@ -251,7 +251,8 @@ With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the non-GPUDi
 
 Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, we find the overhead does not increase. this lends credence to the idea that such a solution would also work for a much larger deployment. Specifically, it would be possible to ramp up a similar deployment in FutureGrid \cite{fox2013futuregrid} or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results support the theory that a majority of HPC computations can be supported in virtualized environment. 
 
-TODO: Discuss integration into OpenStack via PCI-Passthrough of GPUs (done) as well as InfiniBand integration (somewhat done, working on it for SR-IOV), Mellanox Neutron plugin. Describe possibility of a virtual cluster (keyword).  
+\input{openstack}
+
 
 \section{Conclusion}
 
