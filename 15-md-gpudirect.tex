@@ -51,6 +51,12 @@
 	Arlington, VA 22203}
 	{jwalters@isi.edu}
 
+\authorinfo{Stephen P. Crago}
+	{Information Sciences Institute\\
+	University of Southern California\\
+	Arlington, VA 22203}
+	{crago@isi.edu}
+
 \authorinfo{Geoffrey C. Fox}
 	{School of Informatics \& Computing\\
 	Indiana University \\
@@ -104,7 +110,9 @@ and I/O~\cite{jose2013sr,Musleh2014cloud}.
 
 With the advances in hypervisor performance coupled with the newfound availability of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we see can see the possibility of a high performance cloud infrastructure using virtualization. While our previous efforts in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate in distributed environments as found in today's cluster and cloud infrastructures. 
 
-We begin by describing a heterogeneous cloud platform, based on OpenStack. This
+Efforts to improve power efficiency and performance in data centers has led to more heterogeneous architectures. That move toward heterogeneity has, in turn, led to support for heterogeneity in the cloud. For example, Amazon EC2 supports GPU accelerators in EC2~\cite{www-amazon-gpu}, and OpenStack supports heterogeneity using flavors~\cite{www-openstack-flavors}. These advancements in cloud-level support for heterogeneity combined with better support for high-performance virtualization makes the use of cloud for HPC much more feasible for a wider range of applications and platforms.
+
+In this paper we discribe background a related work. Then, we describe a heterogeneous cloud platform based on OpenStack. This
 effort has been under development at USC/ISI since 2011~\cite{crago2011heterogeneous}.
 We describe our work towards integrating GPU and InfiniBand support into
 OpenStack, and we describe the heterogeneous scheduling additions that are
