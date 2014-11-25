@@ -19,7 +19,7 @@
 
 \section{Benchmarks}
 We selected two molecular dynamics (MD) applications for evaluation in this study:
-LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These MD siulations are chosen to represent a subset of advance parallel computation for a number of fundamental reasons:
+LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These MD simulations are chosen to represent a subset of advance parallel computation for a number of fundamental reasons:
 
 \begin{itemize}
 \item MD simulations provide a good practical representation of N-Body simulations, which is one of the major computational \emph{Dwarfs} \cite{asanovic2006landscape} in parallel and distributed computing. 
@@ -27,7 +27,7 @@ LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These MD siulatio
 \item Many MD simulations have a hybrid MPI+CUDA programming model, which has often become commonplace in HPC as the use of accelerators increases.
 \end{itemize}
 
-As such, we look to LAMMPS and HOOMD to provide a real-world example for running cutting-edge parallel programs on virtualized infrastructure. While these applications by no means represent all parallel scientific computing efforts (as justified by the 13 Drafs defined in \cite{asanovic2006landscape}), we hope these MD simulators offer a more pragmatic viewpoint than traditional synthetic HPC benchmarks such as High Performance Linpack. 
+As such, we look to LAMMPS and HOOMD to provide a real-world example for running cutting-edge parallel programs on virtualized infrastructure. While these applications by no means represent all parallel scientific computing efforts (as justified by the 13 Dwarfs defined in \cite{asanovic2006landscape}), we hope these MD simulators offer a more pragmatic viewpoint than traditional synthetic HPC benchmarks such as High Performance Linpack. 
 
 \paragraph {LAMMPS} The Large-scale Atomic/Molecular Parallel Simulator is a
 well-understood highly parallel molecular dynamics simulator.  It supports both
@@ -40,11 +40,11 @@ copied from the GPU back to the host and sent over the InfiniBand fabric.  No
 RDMA is used for these experiments.  
 
 \paragraph{HOOMD-blue} The Highly Optimized Object-oriented Many-particle
-Dyanmics -- Blue Edition is a particle dynamics simualtor capable of
+Dynamics -- Blue Edition is a particle dynamics simulator capable of
 scaling into the thousands of GPUs.  HOOMD supports executing on both CPUs and
 GPUs.  Unlike LAMMPS, HOOMD is homogeneous and does not support mixing
-of GPUs and CPUs.  HOOMD supports GPUdirect using a CUDA-enabled MPI.
+of GPUs and CPUs.  HOOMD supports GPUDirect using a CUDA-enabled MPI.
 In this paper we focus on HOOMD's
-support for GPUdirect and show its benefits for increasing cluster sizes.  
+support for GPUDirect and show its benefits for increasing cluster sizes.  
 
 

@@ -28,8 +28,8 @@ scheduler dispatches jobs to nodes based on resource requirements (e.g. Kepler
 GPU) and node-level resource availability.
 
 At the node, a second level of scheduling occurs to ensure that resources are
-tracked and not overcommitted.  Unlike traditional cloud paradigms, devices
-passed into VMs cannot be overcommitted.  We treat devices, whether GPUs or
+tracked and not over-committed.  Unlike traditional cloud paradigms, devices
+passed into VMs cannot be over-committed.  We treat devices, whether GPUs or
 InfiniBand virtual functions, as schedulable resources.  Thus, it is the responsibility of the
 individual node to track resources committed and report availability to the
 cloud-level scheduler.  For reporting, we piggyback on top of OpenStack's
