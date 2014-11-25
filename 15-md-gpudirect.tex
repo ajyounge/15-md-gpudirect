@@ -86,7 +86,21 @@ At present we stand at the inevitable intersection between High Performance Comp
 
 Nevertheless, there exists a past notion that virtualization used in today's cloud infrastructure is inherently inefficient.  Historically, cloud infrastructure has also done little to provide the necessary advanced hardware capabilities that have become almost mandatory in supercomputers today, most notably advanced GPUs and high-speed, low-latency interconnects.  The result of these notions has hindered the use of virtualized environments for parallel computation, where performance must be paramount.
 
-A growing effort is currently underway that looks to systematically identify and reduce any overhead in virtualization technologies, so far with relative success \cite{Younge2011cloud, Luszczek:2011:EHC}.  Thus, we see a constantly diminishing overhead with virtualization, not only with traditional cloud workloads \cite{huber2011evaluating} but also with HPC workloads.  While virtualization will almost always include some additional overhead in relation to its dynamic features, the eventual goal for supporting HPC in virtualized environments is to minimize what overhead exists whenever possible.  To advance the placement of HPC applications on virtual machines, new efforts are emerging which focus specifically on key hardware now commonplace in supercomputers. By leveraging new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now support the such advanced hardware as the latest Nvidia Tesla GPUs \cite{Walters2014cloud}  as well as InfiniBand fabric\cite{jose2013sr}.  
+A growing effort is currently underway that looks to systematically identify and
+reduce any overhead in virtualization technologies. This effort has, thus far,
+proven to be a qualified success~\cite{Younge2011cloud, Luszczek:2011:EHC}, though further research is needed to address
+issues of scalability and I/O.  Thus, we see a constantly diminishing overhead
+with virtualization, not only with traditional cloud workloads
+\cite{huber2011evaluating} but also with HPC workloads.  While virtualization
+will almost always include some additional overhead in relation to its dynamic
+features, the eventual goal for supporting HPC in virtualized environments is to
+minimize what overhead exists whenever possible.  To advance the placement of
+HPC applications on virtual machines, new efforts are emerging which focus
+specifically on key hardware now commonplace in supercomputers. By leveraging
+new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now
+support the such advanced hardware as the latest Nvidia Tesla GPUs
+\cite{Walters2014cloud}  as well as InfiniBand fabrics for high performance networking
+and I/O~\cite{jose2013sr,Musleh2014cloud}.  
 
 With the advances in hypervisor performance coupled with the newfound availably of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we see can see the possibility of a high performance cloud infrastructure using virtualization. While our previous efforts in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate in distributed environments as found in today's cluster and cloud infrastructures. 
 
