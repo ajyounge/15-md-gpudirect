@@ -1,5 +1,6 @@
 %\documentclass[10pt, conference, compsocconf]{IEEEtran}
-\documentclass[times,10pt,twocolumn,conference]{IEEEtran}
+%\documentclass[times,10pt,twocolumn,conference]{IEEEtran}
+\documentclass{sigplanconf}
 
 \usepackage{setspace}
 \usepackage{times}
@@ -12,33 +13,49 @@
 \usepackage{setspace}
 \usepackage{tabularx,colortbl}
 \usepackage{subfigure}
-\usepackage{cite}
+%\usepackage{cite}
 \usepackage{multicol}
 \usepackage[usenames]{color}
+%ACM SIGPLAN
+\usepackage{amsmath}
+
+
 
 \begin{document}
+
+%ACM
+\special{papersize=8.5in,11in}
+\setlength{\pdfpageheight}{\paperheight}
+\setlength{\pdfpagewidth}{\paperwidth}
+
+
+\conferenceinfo{CONF 'yy}{Month d--d, 20yy, City, ST, Country} 
+\copyrightyear{20yy} 
+\copyrightdata{978-1-nnnn-nnnn-n/yy/mm} 
+\doi{nnnnnnn.nnnnnnn}
 
 \input{tex/macros}
 
 
 \title{Supporting High Performance Molecular Dynamics in Virtualized Clusters using IOMMU, SR-IOV, and GPUDirect}
-\author{\IEEEauthorblockN{Andrew J. Younge}
-\IEEEauthorblockA{School of Informatics \& Computing\\
-Indiana University \\
-Bloomington, IN 47408 \\
-Email: ajyounge@indiana.edu}
-\and
-\IEEEauthorblockN{John Paul Walters}
-\IEEEauthorblockA{Information Sciences Institute\\
-University of Southern California\\
-Arlington, VA 22203\\
-Email: jwalters@isi.edu}
-\and
-\IEEEauthorblockN{Geoffrey C. Fox}
-\IEEEauthorblockA{School of Informatics \& Computing\\
-Indiana University \\
-Bloomington, IN 47408 \\
-Email: gcf@indiana.edu}}
+
+\authorinfo{Andrew J. Younge}
+{School of Informatics \& Computing\\
+	Indiana University \\
+	Bloomington, IN 47408}
+	{ajyounge@indiana.edu}
+
+\authorinfo{John Paul Walters}
+	{Information Sciences Institute\\
+	University of Southern California\\
+	Arlington, VA 22203}
+	{jwalters@isi.edu}
+
+\authorinfo{Geoffrey C. Fox}
+	{School of Informatics \& Computing\\
+	Indiana University \\
+	Bloomington, IN 47408}
+	{gcf@indiana.edu}
 
 
 \maketitle
@@ -65,7 +82,7 @@ By using KVM virtual machines that leverage both Nvidia GPUs and InfiniBand, we 
 
 \section{Introduction}
 
-At present we stand at the inevitable intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC \cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. The growing importance of supporting advanced scientific computing using cloud infrastructure can be seen by a variety of new efforts, including the NSF-funded XSEDE Comet resource at SDSC \cite{sdsc2014comet}.  
+At present we stand at the inevitable intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. The growing importance of supporting advanced scientific computing using cloud infrastructure can be seen by a variety of new efforts, including the NSF-funded XSEDE Comet resource at SDSC \cite{sdsc2014comet}.  
 
 Nevertheless, there exists a past notion that virtualization used in today's cloud infrastructure is inherently inefficient.  Historically, cloud infrastructure has also done little to provide the necessary advanced hardware capabilities that have become almost mandatory in supercomputers today, most notably advanced GPUs and high-speed, low-latency interconnects.  The result of these notions has hindered the use of virtualized environments for parallel computation, where performance must be paramount.
 
@@ -253,8 +270,8 @@ With the advent of cloud infrastructure, the ability to run large-scale parallel
 
 %* First to show GDR in virtual machine \\
 
-\bibliographystyle{tex/IEEEtran}
-
+%\bibliographystyle{tex/IEEEtran}
+\bibliographystyle{abbrvnat}
 
 \bibliography{biblio}
 
