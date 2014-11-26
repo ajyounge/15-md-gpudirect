@@ -18,6 +18,8 @@
 \usepackage[usenames]{color}
 %ACM SIGPLAN
 \usepackage{amsmath}
+%\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{url}
 
 
 
@@ -112,7 +114,7 @@ With the advances in hypervisor performance coupled with the newfound availabili
 
 Efforts to improve power efficiency and performance in data centers has led to more heterogeneous architectures. That move toward heterogeneity has, in turn, led to support for heterogeneity in the cloud. For example, Amazon EC2 supports GPU accelerators in EC2~\cite{www-amazon-gpu}, and OpenStack supports heterogeneity using flavors~\cite{www-openstack-flavors}. These advancements in cloud-level support for heterogeneity combined with better support for high-performance virtualization makes the use of cloud for HPC much more feasible for a wider range of applications and platforms.
 
-In this paper we discribe background a related work. Then, we describe a heterogeneous cloud platform based on OpenStack. This
+In this paper we discribe background a related work. Then, we describe a heterogeneous cloud platform, based on OpenStack. This
 effort has been under development at USC/ISI since 2011~\cite{crago2011heterogeneous}.
 We describe our work towards integrating GPU and InfiniBand support into
 OpenStack, and we describe the heterogeneous scheduling additions that are
