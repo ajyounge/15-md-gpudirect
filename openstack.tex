@@ -10,14 +10,12 @@ OpenStack~\cite{www-openstack}.  In our previous work, we
 have demonstrated the ability to rapidly provision GPU, bare metal, and other
 heterogeneous resources within a single cloud~\cite{crago2011heterogeneous}.
 Building on this effort we have added support for GPU passthrough to OpenStack
-as well as SR-IOV support for both ConnectX-2 and ConnectX-3 Infiniband devices.
-Mellanox separately supports an OpenStack InfiniBand networking plugin for
-OpenStack's Neutron service~\cite{ML2}, however the Mellanox plugin depends on
-the ConnectX-3 adapter.  Our institutional requirements depend on ConnecteX-2
-SR-IOV support, requiring an independent implementation.
-
-OpenStack supports services for networking (Neutron), compute (Nova), identity
-(Keystone), storage (Cinder, Swift), and others.  Our work focuses entirely
+as well as prototyped SR-IOV support for ConnectX-2 and ConnectX-3 Infiniband devices.
+Mellanox  has since added an OpenStack InfiniBand networking plugin for
+OpenStack's Neutron service~\cite{ML2}. %Our institutional requirements depend on ConnecteX-2
+%SR-IOV support, requiring an independent implementation. 
+While OpenStack supports services for networking (Neutron), compute (Nova), identity
+(Keystone), storage (Cinder, Swift), and others, our work focuses entirely
 on the compute service.  
 
 Scheduling is implemented at two levels: the cloud-level and the node-level.  In
