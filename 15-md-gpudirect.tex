@@ -192,21 +192,16 @@ SR-IOV has been used in conjunction with Ethernet devices to provide high perfor
 Recently SR-IOV support for InfiniBand has been added by Mellanox in the ConnectX series adapters. Initial evaluation of SR-IOV InfiniBand within KVM VMs has proven has found point-to-point bandwidth to be near-native, but up to 30\% latency overhead for very small messages \cite{jose2013sr, RuivoAGTKNR14}. However, even with the noted overhead, this still signifies up to an order of magnitude difference in latency between InfiniBand and Ethernet with VMs. Furthermore, advanced configuration of SR-IOV enabled InfiniBand fabric is taking shape, with recent research showing up to a 30\% reduction in the latency overhead \cite{Musleh2014cloud}. However, real application performance has not yet been well understood until now. 
 
 \subsection{GPUDirect}
-NVIDIA's GPUDirect technology was introduced to reduce the overhead of data
-movement across GPUs~\cite{GPUDirect, shainer2011development}.  GPUDirect
-supports both networking as
-well as peer-to-peer interfaces for single node multi-GPU systems.  The most
-recent implementation of GPUDirect, version 3, adds support for RDMA over
-InfiniBand for Kepler-class GPUs.
-
+NVIDIA's GPUDirect technology was introduced to reduce the overhead of data movement across GPUs~\cite{GPUDirect, shainer2011development}.  
+%GPUDirect supports both networking as well as peer-to-peer interfaces for single node multi-GPU systems.  The most recent implementation of GPUDirect, version 3, adds support for RDMA over InfiniBand for Kepler-class GPUs.
+Currently, there exists three distinct versions of GPUDirect.  GPUDirect v1 adds accelerated communication with network and storage devices through the use of a single CPU buffer, and GPUDirect v2 provides peer-to-peer communication between discrete GPUs on a single node.  GPUDirect v3, the most recent version and what is used in this manuscript, provides support for direct RDMA between GPUs across an InfiniBand interconnect for Kepler-class GPUs. This alleviates the need for staging data to/from host memory in order to transmit data via InfiniBand between GPUs on separate nodes. 
 The networking component of GPUDirect relies on three key technologies: CUDA 5
 (and up), a CUDA-enabled MPI implementation, and a Kepler-class GPU (RDMA only).
 Both MVAPICH and OpenMPI support GPUDirect.  Support for RDMA over GPUDirect is
-enabled by the MPI library, given supported hardware, and does not depend on
-application-level changes to a user's code.
-
-In this paper, our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA
-support.  We demonstrate scaling for up to 4 nodes connected via QDR InfiniBand
+enabled by the MPI library, given supported hardware.
+%, and does not depend on application-level changes to a user's code.
+In this paper, %our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA support.  We 
+we demonstrate scaling a MD simulation to 4 nodes connected via QDR InfiniBand
 and show that GPUDirect RDMA improves both scalability and overall performance
 by approximately 9\% at no cost to the end user.
 
@@ -232,17 +227,18 @@ For the first time, we also demonstrate Nvidia GPUDirect technology within such 
 
 \subsection{Node configuration}
 
-To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
-
 \FIGURE{!htb}
   {images/host-pci-passthrough.png}
   {1.0}
   {Node PCI Passthrough of GPUs and InfiniBand}
   {F:passthrough}
 
+To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
+
+
+
 
 Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor, QEMU 2.1, and the \emph{vfio} driver.  Each Guest VM runs CentOS 6.4 with a stock 2.6.32-358.23.2 kernel. A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirrus VGA was emulated in the guest OS. 
-
 With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox ConnectX-3 VPI adapter with firmware 2.31.5050.  The host driver initiates 4 VFs, one of which is passed through to the VM where the default OFED mlnx\_ib drivers are loaded.  
 
 %The native bare-metal base system and all guest VMs are composed of a CentOS 6.4 installation with a 2.6.32-358.23.2 stock kernel, MVAPICH 2.0 GDR, and CUDA version 5.5. Each guest was allocated 20 GB of RAM and a full socket (8 cores) as well as a single InfiniBand virtual function  and 1 Kepler GPU per VM.  
@@ -263,11 +259,8 @@ manager for IPoIB functionality.
 
 
 For these experiments, both the GPUs and InfiniBand adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.  Each guest was allocated 20 GB of RAM and a full socket of 8 cores, and pinned to NUMA node 1 to ensure optimal hardware usage. While all VMs are capable of login via the InfiniBand IPoIB setup, a 1Gb Ethernet network was used for all management and login tasks.  
-
-%Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potenti
-
 For a fair and effective comparison, we also use a native environment without any virtualization. This native environment employs the same hardware configuration, and like the Guest OS runs CentOS 6.4 with the stock 2.6.32-358.23.2 kernel. 
-
+%Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potenti
 %In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  While the effective experimental hardware allocation remains relatively low compared to production runs of either application, it does allow for a useful evaluation at a larger scale than preivously evaluated as well as a valued extrapolation to larger resources.
 
  
@@ -277,11 +270,18 @@ In this section, we discuss the performance of both the LAMMPS and HOOMD molecul
 
 \subsection{LAMMPS}
 
+
 \FIGURE{!htb}
   {images/lammps-lj-scale.png}
   {1.0}
   {LAMMPS LJ Performance}
   {F:lammps-lj}
+
+\FIGURE{!htb}
+  {images/lammps-rhodo-scale.png}
+  {1.0}
+  {LAMMPS RHODO Performance}
+  {F:lammps-rhodo}
 
 
 Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, and a 8:1 core to GPU mapping.  With the LAMMPS GPU implementation, a delicate balance between GPUs and CPUs is required to find the optimal ratio for fastest computation, however here we just look at the two most obvious choices. With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity provided with multi-core solution.  As expected the multi-core configuration quickly offers better performance for larger problem sizes, achieving roughly twice the performance with all 32 available cores. This is largely due to the availability of all 8 cores to keep the GPU running 100\% with continual computation.
@@ -291,14 +291,9 @@ The important factor for this manuscript is the relative performance of the virt
  %and the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), both running with the GPU package across 8 cores per GPU. Here we see that both benchmarks scale remarkably well in the virtualized KVM guest environment. 
 %Compared to the base system performance, the VMs running LAMMPs acheive 96.7\% and 99.3\% efficiency for LJ and Rhodo, respectively when running across all nodes.  These low overheads illustrate the utility of running LAMPS on cloud infrastructure, and also hold promise for other hybrid MPI + CUDA applications to also scale well in a virtualized environment. 
 
-
 Another common LAMMPS algorithm, the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), was also run with results given in Figure \ref{F:lammps-rhodo}. As with the LJ runs, we see the multi-core to GPU configuration resulting in higher computational performance for the larger problem sizes compared to the single core per GPU configuration, as expected.  
 
-\FIGURE{!htb}
-  {images/lammps-rhodo-scale.png}
-  {1.0}
-  {LAMMPS RHODO Performance}
-  {F:lammps-rhodo}
+
 
 Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% efficiency compared to native. We also see the gap in performance decrease as the problem size increases, with the 512k problem size in yielding 99.3\% of native performance.  This finding leads us to extrapolate that a virtualized MPI+CUDA implementation could scale to a larger computational resource with similar success. 
 
