@@ -222,24 +222,23 @@ by approximately 9\% at no cost to the end user.
 \section{Experimental Setup}
 
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment. 
-
 For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads including MD simulations, but also that the latest HPC features and programming environments are also available in this same model.   
 
 \subsection{Node configuration}
+
+
+
+To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
+
+
+Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor, QEMU 2.1, and the \emph{vfio} driver.  Each Guest VM runs CentOS 6.4 with a stock 2.6.32-358.23.2 kernel. A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirrus VGA was emulated in the guest OS. 
+With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox ConnectX-3 VPI adapter with firmware 2.31.5050.  The host driver initiates 4 VFs, one of which is passed through to the VM where the default OFED mlnx\_ib drivers are loaded.  
 
 \FIGURE{!htb}
   {images/host-pci-passthrough.png}
   {1.0}
   {Node PCI Passthrough of GPUs and InfiniBand}
   {F:passthrough}
-
-To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
-
-
-
-
-Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor, QEMU 2.1, and the \emph{vfio} driver.  Each Guest VM runs CentOS 6.4 with a stock 2.6.32-358.23.2 kernel. A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirrus VGA was emulated in the guest OS. 
-With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox ConnectX-3 VPI adapter with firmware 2.31.5050.  The host driver initiates 4 VFs, one of which is passed through to the VM where the default OFED mlnx\_ib drivers are loaded.  
 
 %The native bare-metal base system and all guest VMs are composed of a CentOS 6.4 installation with a 2.6.32-358.23.2 stock kernel, MVAPICH 2.0 GDR, and CUDA version 5.5. Each guest was allocated 20 GB of RAM and a full socket (8 cores) as well as a single InfiniBand virtual function  and 1 Kepler GPU per VM.  
 
