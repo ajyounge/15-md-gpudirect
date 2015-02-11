@@ -22,9 +22,9 @@ We selected two molecular dynamics (MD) applications for evaluation in this stud
 LAMMPS and HOOMD~\cite{plimpton2007lammps,anderson2010hoomd}.  These MD simulations are chosen to represent a subset of advanced parallel computation for a number of fundamental reasons:
 
 \begin{itemize}
-\item MD simulations provide a practical representation of N-Body simulations, which is one of the major computational \emph{Dwarfs} \cite{asanovic2006landscape} in parallel and distributed computing. 
+\item MD simulations provide a practical representation of N-Body simulations, which are one of the major computational \emph{Dwarfs} \cite{asanovic2006landscape} in parallel and distributed computing. 
 \item MD simulations are one of the most widely deployed applications on large scale supercomputers today.
-\item Many MD simulations have a hybrid MPI+CUDA programming model, which has often become commonplace in HPC as the use of accelerators increases.
+\item Many MD simulations have a hybrid MPI+CUDA programming model, which has become commonplace in HPC as the use of accelerators increase.
 \end{itemize}
 
 As such, we look to LAMMPS and HOOMD to provide a real-world example for running cutting-edge parallel programs on virtualized infrastructure. While these applications by no means represent all parallel scientific computing efforts (as justified by the 13 Dwarfs defined in \cite{asanovic2006landscape}), we hope these MD simulators offer a more pragmatic viewpoint than traditional synthetic HPC benchmarks such as High Performance Linpack. 
