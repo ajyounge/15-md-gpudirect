@@ -102,7 +102,7 @@ Arlington, VA 22203}
 \maketitle
 \begin{abstract}
 
-Cloud infrastructure-as-a-Service paradigms have recently shown their utility for a vast array of computational problems, ranging from advanced web service architectures to high throughput computing.  However, many scientific computing applications have been slow to adapt to virtualized cloud frameworks. This is due to performance impacts of virtualization technologies, coupled with the lack of advanced hardware support necessary for running many high performance scientific applications at scale. 
+Cloud Infrastructure-as-a-Service paradigms have recently shown their utility for a vast array of computational problems, ranging from advanced web service architectures to high throughput computing.  However, many scientific computing applications have been slow to adapt to virtualized cloud frameworks. This is due to performance impacts of virtualization technologies, coupled with the lack of advanced hardware support necessary for running many high performance scientific applications at scale. 
 
 By using KVM virtual machines that leverage both Nvidia GPUs and InfiniBand, we show that molecular dynamics simulations with LAMMPS and HOOMD run at near-native speeds. This experiment also illustrates how virtualized environments can support the latest parallel computing paradigms, including both MPI+CUDA and new GPUDirect RDMA functionality. Specific findings show initial promise in scaling of such applications to larger production deployments targeting large scale computational workloads.  
 
@@ -184,7 +184,7 @@ some of the world's fastest supercomputers and represent example simulations
 that HPC supports today.  We show that these applications are able to run at
 near-native speeds within a completely virtualized environment.
 Furthermore, we demonstrate the ability of such a virtualized environment to
-support cutting edge technologies such as RDMA GPUDirect, demonstrating that the
+support cutting edge technologies such as RDMA GPUDirect, illustrating that the
 latest HPC technologies are also possible in a virtualized environment.
 In Section~\ref{discussion}, we provide a brief discussion before concluding in
 Section~\ref{conclusion}. 
@@ -209,7 +209,8 @@ Section~\ref{conclusion}.
 
 %NOTE: first introduce virtualization, and I/O featuresets. Then enable GPUs. Then bring in SR-IOv and infiniBand. Finally, discuss applications and GPUDirect.
 
-Virtualization technologies and hypervisors have seen widespread deployment in support of a vast array of applications.  This ranges from public commercial cloud deployments such as Amazon EC2 \cite{amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyberinfrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
+Virtualization technologies and hypervisors have seen 
+wide-spread deployment in support of a vast array of applications.  This ranges from public commercial cloud deployments such as Amazon EC2 \cite{amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyberinfrastructure initiatives.  All these look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
 
 The use of virtualization and hypervisors to support various HPC solutions has been studied with mixed results.  In ~\cite{Younge2011cloud}, it is found that there is a great deal of variance between hypervisors when running various distributed memory and MPI applications, and that overall, KVM performed well across an array of HPC benchmarks.  Furthermore, some applications may not may fit well into default virtualized environments, such as High Performance Linpack \cite{Luszczek:2011:EHC}. Other studies have specifically looked at interconnect performance in virtualization and found the best-case scenario to be lacking \cite{Ramakrishnan2012}, with up to 60\% performance penalties with conventional techniques.
  
