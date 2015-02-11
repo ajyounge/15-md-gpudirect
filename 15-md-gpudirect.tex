@@ -117,11 +117,29 @@ By using KVM virtual machines that leverage both Nvidia GPUs and InfiniBand, we 
 
 At present we stand at the inevitable intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. The growing importance of supporting advanced scientific computing using virtualized infrastructure can be seen by a variety of new efforts, including the NSF-funded Comet resource part of XSEDE at San Diego Supercomputer Center \cite{moore2014gateways}.  
 
-Nevertheless, there exists a past notion that virtualization used in today's cloud infrastructure is inherently inefficient.  Historically, cloud infrastructure has also done little to provide the necessary advanced hardware capabilities that have become almost mandatory in supercomputers today, most notably advanced GPUs and high-speed, low-latency interconnects.  The result of these notions has hindered the use of virtualized environments for parallel computation, where performance must be paramount.
+Nevertheless, there exists a past notion that virtualization used in today's
+cloud infrastructure is inherently inefficient.  Historically, cloud
+infrastructure has also done little to provide the necessary advanced hardware
+capabilities that have become almost mandatory in supercomputers today, most
+notably advanced GPUs and high-speed, low-latency interconnects.  Instead, cloud
+infrastructure providers have favored commodity homogeneous systems.  The result
+of these notions has hindered the use of virtualized environments for parallel
+computation, where performance must be paramount.
 
-A growing effort is currently underway that looks to systematically identify and
+This is starting to change, however, as today's cloud providers seek improved
+performance at lower power.  This has resulted in a heterogeneous cloud.
+Amazon EC2 supports GPU accelerators in EC2~\cite{www-amazon-gpu}, and
+OpenStack supports heterogeneity using flavors~\cite{www-openstack-flavors}.
+These advancements in cloud-level support for heterogeneity combined with better
+support for high-performance virtualization makes the use of cloud for HPC much
+more feasible for a wider range of applications and platforms.
+
+Still, performance remains a concern within virtualized environments.  To that
+end, a growing effort is currently underway that looks to systematically identify and
 reduce any overhead in virtualization technologies.  While some of the first efforts to investigate HPC applications on cloud infrastructure such as in the DOE Magellan project \cite{yelick2011magellan} documented many shortcomings in performance, recent efforts have proven to be a qualified success~\cite{Younge2011cloud, Luszczek:2011:EHC}, though further research is needed to address
-issues of scalability and I/O.  Thus, we see a constantly diminishing overhead
+issues of scalability and I/O.  
+
+Thus, we see constantly diminishing overhead
 with virtualization, not only with traditional cloud workloads
 \cite{huber2011evaluating} but also with HPC workloads.  While virtualization
 will almost always include some additional overhead in relation to its dynamic
@@ -132,22 +150,39 @@ specifically on key hardware now commonplace in supercomputers. By leveraging
 new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now
 support the such advanced hardware as the latest Nvidia Tesla GPUs
 \cite{Walters2014cloud}  as well as InfiniBand fabrics for high performance networking
-and I/O~\cite{jose2013sr,Musleh2014cloud}.  
+and I/O~\cite{jose2013sr,Musleh2014cloud}. While revious efforts have
+focused on single-node advancements, our contribution in this paper is to show
+that real-world applications can operate efficiently in multi-node clusters and cloud
+infrastructure.  
 
-With the advances in hypervisor performance coupled with the newfound availability of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we can see the possibility of a high performance cloud infrastructure using virtualization. While our previous efforts in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate in distributed environments as found in today's cluster and cloud infrastructures. 
+%With the advances in hypervisor performance coupled with the newfound availability of HPC hardware in virtual machines analogous to the most powerful supercomputers used today, we can see the possibility of a high performance cloud infrastructure using virtualization. While our previous efforts in this area have focused on single-node advancements, it is now imperative to ensure real-world applications can also operate in distributed environments as found in today's cluster and cloud infrastructures. 
 
-Efforts to improve power efficiency and performance in data centers has led to more heterogeneous architectures. That move toward heterogeneity has, in turn, led to support for heterogeneity in the cloud. For example, Amazon EC2 supports GPU accelerators in EC2~\cite{www-amazon-gpu}, and OpenStack supports heterogeneity using flavors~\cite{www-openstack-flavors}. These advancements in cloud-level support for heterogeneity combined with better support for high-performance virtualization makes the use of cloud for HPC much more feasible for a wider range of applications and platforms.
 
-First, we describe the background and related work necessary for high performance virtualization. Then, we describe a heterogeneous cloud platform, based on OpenStack. This
+
+
+The remainder of this paper is organized as follows.  In
+Section~\ref{Background} we describe the background and related work necessary for high performance
+virtualization. In Section~\ref{openstack}, we describe a heterogeneous cloud platform, based on OpenStack. This
 effort has been under development at USC/ISI since 2011~\cite{crago2011heterogeneous}.
 We describe our work towards integrating GPU and InfiniBand support into
 OpenStack, and we describe the heterogeneous scheduling additions that are
 necessary to support not only attached accelerators, but any cloud composed of
 heterogeneous elements.  
 
-We then demonstrate running two molecular dynamics simulations, LAMMPS and HOOMD, in a virtual infrastructure complete with both Kepler GPUs and QDR InfiniBand.  Both HOOMD and LAMMPS are used extensively in some of the world's fastest supercomputers and represent example simulations that HPC supports today.  We show that these applications are able to run at near-native speeds within a completely virtualized environment, demonstrating just small performance impacts that are usually acceptable by many users. Furthermore, we demonstrate the ability of such a virtualized environment to support cutting edge software tools such as RDMA GPUDirect, illustrating how cutting-edge HPC technologies are also possible in a virtualized environment. 
+In Sections~\ref{benchmarks} and~\ref{setup} we describe the LAMMPS and HOOMD
+benchmarks and our experimental setup.  In Section~\ref{results} we characterize the
+performance of LAMMPS and HOOMD in a virtual infrastructure complete with both
+Kepler GPUs and QDR InfiniBand.  Both HOOMD and LAMMPS are used extensively in
+some of the world's fastest supercomputers and represent example simulations
+that HPC supports today.  We show that these applications are able to run at
+near-native speeds within a completely virtualized environment.
+Furthermore, we demonstrate the ability of such a virtualized environment to
+support cutting edge technologies such as RDMA GPUDirect, demonstrating that the
+latest HPC technologies are also possible in a virtualized environment.
+In Section~\ref{discussion}, we provide a brief discussion before concluding in
+Section~\ref{conclusion}. 
 
-Following these efforts, we hope to ensure upstream infrastructure projects such as OpenStack \cite{www-openstack, pepple2011deploying} are able to make effective and quick use of these features, allowing users to build private cloud infrastructure to support high performance distributed computational workloads. 
+%Following these efforts, we hope to ensure upstream infrastructure projects such as OpenStack \cite{www-openstack, pepple2011deploying} are able to make effective and quick use of these features, allowing users to build private cloud infrastructure to support high performance distributed computational workloads. 
 
 %Furthermore, the tighet and exact integration into an open source Cloud infrastructure framework such as OpenStack also becomes a critical next step.  
 
@@ -163,11 +198,11 @@ Following these efforts, we hope to ensure upstream infrastructure projects such
 %* In this work we demonstrate two molecular dynamics simuations running in a virtual infrastructure: LAMMPS and  HOOMD \\
 %* We show that both perform near-native, and we show GPU Direct RDMA for the first time in the cloud \\
 
-\section{Background and Related Work}
+\section{Background and Related Work}\label{Background}
 
 %NOTE: first introduce virtualization, and I/O featuresets. Then enable GPUs. Then bring in SR-IOv and infiniBand. Finally, discuss applications and GPUDirect.
 
-Virtualization technologies and hypervisors have seen widespread deployment in support of a vast array of applications.  This ranges from public commercial Cloud deployments such as Amazon EC2 \cite{hazelhurst2008scientific,amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyber infrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
+Virtualization technologies and hypervisors have seen widespread deployment in support of a vast array of applications.  This ranges from public commercial Cloud deployments such as Amazon EC2 \cite{amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyber infrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
 
 The use of virtualization and hypervisors to support various HPC solutions has been studied with mixed results.  In ~\cite{Younge2011cloud}, it is found that there is a great deal of variance between hypervisors when running various distributed memory and MPI applications, finding that KVM overall performed well across an array of HPC benchmarks.  Furthermore, some applications may not may fit well into default virtualized environments, such as High Performance Linpack \cite{Luszczek:2011:EHC}. Other studies have specifically looked at interconnect performance in virtualization and found the best-case scenario to be lacking \cite{Ramakrishnan2012} with up to 60\% performance penalties with conventional techniques.
  
@@ -219,7 +254,7 @@ by approximately 9\% at no cost to the end user.
 
 
 
-\section{Experimental Setup}
+\section{Experimental Setup}\label{setup}
 
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment. 
 For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads including MD simulations, but also that the latest HPC features and programming environments are also available in this same model.   
@@ -263,7 +298,7 @@ For a fair and effective comparison, we also use a native environment without an
 %In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  While the effective experimental hardware allocation remains relatively low compared to production runs of either application, it does allow for a useful evaluation at a larger scale than preivously evaluated as well as a valued extrapolation to larger resources.
 
  
-\section{Results}
+\section{Results}\label{results}
 
 In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores and 4 GPUs, both in a native bare-metal and virtualized environments.  Each application set was run 10 times, with the results averaged accordingly. 
 
@@ -314,7 +349,7 @@ In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid simula
   {F:HOOMD}
 
 
-\section{Discussion}
+\section{Discussion}\label{discussion}
 
 From the results, we see the potential for running HPC applications in a virtualized environment using GPUs and InfiniBand interconnect fabric. Across all LAMMPS runs with ranging core configurations, we found only a 1.9\% overhead between the KVM virtualized environment and native. For HOOMD, we found a similar 1.5\% overhead, both with and without GPU Direct. These results go against conventional wisdom that HPC workloads do not work in VMs. In fact, we show two N-Body type simulations programmed in an MPI+CUDA implementation perform at roughly near-native performance in tuned KVM virtual machines.  
 
@@ -325,7 +360,7 @@ native a virtualized experiments.  While GPUDirect's performance impact has been
 Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, the overhead does not increase. These results lend credence to the notion that this solution would also work for a much larger deployment, assuming system jitter can be minimized \cite{Seelam2010}. Specifically, it would be possible to expand such computational problems to a larger deployment in FutureGrid \cite{fox2013futuregrid}, Chameleon Cloud \cite{www-chameleon}, or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results help support the theory that a majority of HPC computations can be supported in virtualized environment with minimal overhead. 
 
 
-\section{Conclusion}
+\section{Conclusion}\label{conclusion}
 
 With the advent of cloud infrastructure, the ability to run large-scale parallel scientific applications has become possible but limited due to both performance and hardware availability concerns. In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications such as molecular dynamics simulations run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPS and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud Infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  Our efforts leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework using OpenStack.  
 
