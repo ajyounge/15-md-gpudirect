@@ -36,9 +36,9 @@ LAMMPS is heterogeneous.  It will use both GPUs and multicore CPUs concurrently.
 For this study, this heterogeneous functionality introduces additional load on
 the host, allowing LAMMPS to utilize all available cores on a given system.
 Networking in LAMMPS is accomplished using a typical MPI model. That is, data is
-copied from the GPU back to the host and sent over the InfiniBand fabric.  No
+copied from the GPU back to the host and sent over the InfiniBand fabric.  %No
 %RDMA is used for these experiments. 
-GPUDirect’s v3.0 RDMA feature requires changes to the program, and the specific LAMMPS package used does not have support for GPUDirect RDMA functionality at the time of writing and is therefore unused for LAMMPS. 
+GPUDirect’s v3.0 RDMA feature requires changes to the program, and the specific LAMMPS package used does not have support for GPUDirect RDMA functionality at the time of writing and is therefore unused. %for LAMMPS. 
 
 \paragraph{HOOMD-blue} The Highly Optimized Object-oriented Many-particle
 Dynamics -- Blue Edition is a particle dynamics simulator capable of
