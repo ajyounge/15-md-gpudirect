@@ -72,6 +72,12 @@ Arlington, VA 22203}
 
 
 \begin{comment}
+\authorinfo{Andrew J. Younge}
+	{School of Informatics \& Computing\\
+	Indiana University \\
+	Bloomington, IN 47408}
+	{ajyounge@indiana.edu}
+
 \authorinfo{John Paul Walters}
 	{Information Sciences Institute\\
 	University of Southern California\\
@@ -115,7 +121,7 @@ By using KVM virtual machines that leverage both Nvidia GPUs and InfiniBand, we 
 
 \section{Introduction}
 
-At present we stand at the inevitable intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. The growing importance of supporting advanced scientific computing using virtualized infrastructure can be seen by a variety of new efforts, including the NSF-funded Comet resource part of XSEDE at San Diego Supercomputer Center \cite{moore2014gateways}.  
+At present we stand at the inevitable intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. There is a growing effort to support advanced scientific computing using virtualized infrastructure, which can be seen by a variety of new efforts, including the NSF-funded Comet resource part of XSEDE at San Diego Supercomputer Center \cite{moore2014gateways}.  
 
 Nevertheless, there exists a past notion that virtualization used in today's
 cloud infrastructure is inherently inefficient.  Historically, cloud
@@ -124,7 +130,7 @@ capabilities that have become almost mandatory in supercomputers today, most
 notably advanced GPUs and high-speed, low-latency interconnects.  Instead, cloud
 infrastructure providers have favored commodity homogeneous systems.  The result
 of these notions has hindered the use of virtualized environments for parallel
-computation, where performance must be paramount.
+computation, where performance is paramount.
 
 This is starting to change, however, as today's cloud providers seek improved
 performance at lower power.  This has resulted in a heterogeneous cloud.
@@ -136,7 +142,7 @@ more feasible for a wider range of applications and platforms.
 
 Still, performance remains a concern within virtualized environments.  To that
 end, a growing effort is currently underway that looks to systematically identify and
-reduce any overhead in virtualization technologies.  While some of the first efforts to investigate HPC applications on cloud infrastructure such as in the DOE Magellan project \cite{yelick2011magellan} documented many shortcomings in performance, recent efforts have proven to be a qualified success~\cite{Younge2011cloud, Luszczek:2011:EHC}, though further research is needed to address
+reduce any overhead in virtualization technologies.  While some of the first efforts to investigate HPC applications on cloud infrastructure such as in the DOE Magellan project \cite{yelick2011magellan} documented many shortcomings in performance, recent efforts have proven to be largely successful~\cite{Younge2011cloud, Luszczek:2011:EHC}, though further research is needed to address
 issues of scalability and I/O.  
 
 Thus, we see constantly diminishing overhead
@@ -148,9 +154,9 @@ minimize what overhead exists whenever possible.  To advance the placement of
 HPC applications on virtual machines, new efforts are emerging which focus
 specifically on key hardware now commonplace in supercomputers. By leveraging
 new virtualization tools such as IOMMU device passthrough and SR-IOV, we can now
-support the such advanced hardware as the latest Nvidia Tesla GPUs
+support such advanced hardware as the latest Nvidia Tesla GPUs
 \cite{Walters2014cloud}  as well as InfiniBand fabrics for high performance networking
-and I/O~\cite{jose2013sr,Musleh2014cloud}. While revious efforts have
+and I/O~\cite{jose2013sr,Musleh2014cloud}. While previous efforts have
 focused on single-node advancements, our contribution in this paper is to show
 that real-world applications can operate efficiently in multi-node clusters and cloud
 infrastructure.  
@@ -202,39 +208,41 @@ Section~\ref{conclusion}.
 
 %NOTE: first introduce virtualization, and I/O featuresets. Then enable GPUs. Then bring in SR-IOv and infiniBand. Finally, discuss applications and GPUDirect.
 
-Virtualization technologies and hypervisors have seen widespread deployment in support of a vast array of applications.  This ranges from public commercial Cloud deployments such as Amazon EC2 \cite{amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyber infrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
+Virtualization technologies and hypervisors have seen widespread deployment in support of a vast array of applications.  This ranges from public commercial cloud deployments such as Amazon EC2 \cite{amazon2010}, Microsoft Azure \cite{jennings2010cloud}, and Google's Cloud Platform \cite{www-google-platform} to private deployments within colocation facilities, corporate data centers, and even national scale cyberinfrastructure initiatives.  All these support look to support various use cases and applications such as web servers, ACID and BASE databases, online object storage, and even distributed systems, to name a few.  
 
 The use of virtualization and hypervisors to support various HPC solutions has been studied with mixed results.  In ~\cite{Younge2011cloud}, it is found that there is a great deal of variance between hypervisors when running various distributed memory and MPI applications, finding that KVM overall performed well across an array of HPC benchmarks.  Furthermore, some applications may not may fit well into default virtualized environments, such as High Performance Linpack \cite{Luszczek:2011:EHC}. Other studies have specifically looked at interconnect performance in virtualization and found the best-case scenario to be lacking \cite{Ramakrishnan2012} with up to 60\% performance penalties with conventional techniques.
  
-Recently, various CPU architectures have added support for I/O virtualization mechanisms in the CPU ISA through the use of an I/O memory management unit (IOMMU). Often, this is referred to as PCI Passthrough, as it enabled devices on the PCI-Express bus to be passed directly to a specific virtual machine (VM).  Specific hardware implementations include Intel's VT-d \cite{intelvirtualization}, AMD's IOMMU \cite{amdiommu} from x86\_64 architectures, and even more recently ARM System MMU \cite{armmmu}.  All of these implementations effectively look to aid in the usage of DMA-capable hardware to be used within a specific virtual machine. Using these features, a wide array of hardware can be utilized directly within VMs and enable fast and efficient computation and I/O capabilities.
+Recently, various CPU architectures have added support for I/O virtualization mechanisms in the CPU ISA through the use of an I/O memory management unit (IOMMU). Often, this is referred to as PCI Passthrough, as it enabled devices on the PCI-Express bus to be passed directly to a specific virtual machine (VM).  Specific hardware implementations include Intel's VT-d \cite{intelvirtualization}, AMD's IOMMU \cite{amdiommu} for x86\_64 architectures, and recently ARM System MMU \cite{armmmu}.  All of these implementations effectively look to aid in the usage of DMA-capable hardware to be used within a specific virtual machine. Using these features, a wide array of hardware can be utilized directly within VMs and enable fast and efficient computation and I/O capabilities.
 
-With PCI Passthrough, a PCI device is handed directly to a running (or booting) VM, thereby relinquishing control of the device within the host entirely. This is different from typical VM usage where hardware is emulated in the host and used in a guest VM, such as with bridged Ethernet adapters or emulated VGA devices. Performing PCI Passthrough requires the host to seize the device upon boot using a specialized driver to effectively block normal driver initialization. In the instance of the KVM hypervisor, this is done using the \emph{vfio} and \emph{pci\_stub} drivers. Then, this driver relinquishes control to the VM, whereby normal device drivers initiate the hardware and enable the device for use by the guest OS.  
+
+%%commented out of camera ready to safe space. Perhaps more detail than necessary
+%With PCI Passthrough, a PCI device is handed directly to a running (or booting) VM, thereby relinquishing control of the device within the host entirely. This is different from typical VM usage where hardware is emulated in the host and used in a guest VM, such as with bridged Ethernet adapters or emulated VGA devices. Performing PCI Passthrough requires the host to seize the device upon boot using a specialized driver to effectively block normal driver initialization. In the instance of the KVM hypervisor, this is done using the \emph{vfio} and \emph{pci\_stub} drivers. Then, this driver relinquishes control to the VM, whereby normal device drivers initiate the hardware and enable the device for use by the guest OS.  
 
 \subsection{GPU Passthrough}
 
 Nvidia GPUs comprise the single most common accelerator in the Nov 2014 Top 500 List \cite{www-top500} and represent an increasing shift towards accelerators for HPC applications. Historically, GPU usage in a virtualized environment has been difficult, especially for scientific computation. Various front-end remote API implementations have been developed to provide CUDA and OpenCL libraries in VMs, which translate library calls to a back-end or remote GPU. One common use case of this is rCUDA \cite{duato2011enabling}, which provides a front-end CUDA API within a VM or any compute node, and then sends the calls via Ethernet or InfiniBand to a separate node with 1 or more GPUs. While this method is valid, it has the drawback of relying on the interconnect itself and the bandwidth available, which can be especially problematic on Ethernet. Furthermore, as this method consumes bandwidth, it can leave little remaining for MPI or RDMA routines, thereby constructing a bottleneck for some MPI+CUDA applications that depend on inter-process communication.  Another mechanism of using GPUs in VMs is hypervisor based virtualization \cite{suzuki2014gpuvm}.
 
-Recently efforts have been seen to support such GPU accelerators within VMs using IOMMU technologies, with implementations now available with KVM \cite{Walters2014cloud}, Xen \cite{Younge2014hpgc, tian2014full} and VMWare \cite{Vu2014}.  These efforts have shown that GPUs can achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI Passthrough.  VMWare specifically shows how the such PCI Passthrough solutions perform well and are likely to outperform front-end Remote API solutions such as rCUDA within a VM\cite{Vu2014}.  While these works demonstrate PCI Passthrough performance across a range of hypervisors and GPUs, they have been limited to investigating single node performance until now. 
+Recently efforts have been seen to support such GPU accelerators within VMs using IOMMU technologies, with implementations now available with KVM, Xen, and VMWare \cite{Walters2014cloud, Younge2014hpgc, tian2014full, Vu2014}.  These efforts have shown that GPUs can achieve up to 99\% of their bare metal performance when passed to a virtual machine using PCI Passthrough.  %VMWare specifically shows how the such PCI Passthrough solutions perform well and are likely to outperform front-end Remote API solutions such as rCUDA within a VM\cite{Vu2014}.  
+While it has been demonstrated that using PCI Passthrough results in high performance across a range of hypervisors and GPUs, the efforts have been limited to investigating single node performance until now. 
 
 \subsection{SR-IOV and InfiniBand}
 
-With almost all parallel HPC applications, the interconnect fabric which enables fast and efficient communication between processors becomes a central requirement to achieving good performance. Specifically, a high bandwidth link is needed for distributed processors to share large amounts of data across the system. Furthermore, low latency becomes equally important for ensuring quick delivery of small message communications and resolving large collective barriers within many parallelized codes. One such interconnect, InfiniBand, has become the most common implementation used within the Top500 list. However previously InfiniBand was inaccessible to virtualized environments.  
+With almost all parallel HPC applications, the interconnect fabric which enables fast and efficient communication between processors becomes a central requirement to achieving good performance. Specifically, a high bandwidth link is needed for distributed processors to share large amounts of data across the system. Furthermore, low latency becomes equally important for ensuring quick delivery of small message communications and resolving large collective barriers within many parallelized codes. One such interconnect, InfiniBand, has become the most common implementation used within the Top500 list. %However previously InfiniBand was inaccessible to virtualized environments.  
 
-Supporting I/O interconnects in VMs has been aided by Single Root I/O Virtualization (SR-IOV), whereby multiple virtual PCI functions are created in hardware to represent a single PCI device. These virtual functions (VFs) can then be passed to a VM and used as by the guest as if it had direct access to that PCI device. SR-IOV allows for the virtualization and multiplexing to be done within the hardware, effectively providing higher performance and greater control than software solutions. 
+Supporting I/O interconnects in VMs has been aided by Single Root I/O Virtualization (SR-IOV), whereby multiple virtual PCI functions are created in hardware to represent a single PCI device. These virtual functions (VFs) can then be passed to a VM and used by the guest as if it had direct access to that PCI device. SR-IOV allows for the virtualization and multiplexing to be done within the hardware, effectively providing higher performance and greater control than software solutions. 
 
 SR-IOV has been used in conjunction with Ethernet devices to provide high performance 10Gb TCP/IP connectivity within VMs \cite{Liu2010}, offering near-native bandwidth and advanced QoS features not easily obtained through emulated Ethernet offerings. Currently Amazon EC2 offers a high performance VM solution utilizing SR-IOV enabled 10Gb Ethernet adapters. While SR-IOV enabled 10Gb Ethernet solutions offers a big forward in performance, Ethernet still does not offer the high bandwidth or low latency typically found with InfiniBand solutions. 
 
-Recently SR-IOV support for InfiniBand has been added by Mellanox in the ConnectX series adapters. Initial evaluation of SR-IOV InfiniBand within KVM VMs has proven has found point-to-point bandwidth to be near-native, but up to 30\% latency overhead for very small messages \cite{jose2013sr, RuivoAGTKNR14}. However, even with the noted overhead, this still signifies up to an order of magnitude difference in latency between InfiniBand and Ethernet with VMs. Furthermore, advanced configuration of SR-IOV enabled InfiniBand fabric is taking shape, with recent research showing up to a 30\% reduction in the latency overhead \cite{Musleh2014cloud}. However, real application performance has not yet been well understood until now. 
+Recently SR-IOV support for InfiniBand has been added by Mellanox in the ConnectX series adapters. Initial evaluation of SR-IOV InfiniBand within KVM VMs has demonstration point-to-point bandwidth to be near-native, but up to 30\% latency overhead for very small messages \cite{jose2013sr, RuivoAGTKNR14}. However, even with the noted overhead, this still signifies up to an order of magnitude difference in latency between InfiniBand and Ethernet with VMs. Furthermore, advanced configuration of SR-IOV enabled InfiniBand fabric is taking shape, with recent research showing up to a 30\% reduction in the latency overhead \cite{Musleh2014cloud}. However, real application performance has not yet been well understood until now. 
 
 \subsection{GPUDirect}
 NVIDIA's GPUDirect technology was introduced to reduce the overhead of data movement across GPUs~\cite{GPUDirect, shainer2011development}.  
 %GPUDirect supports both networking as well as peer-to-peer interfaces for single node multi-GPU systems.  The most recent implementation of GPUDirect, version 3, adds support for RDMA over InfiniBand for Kepler-class GPUs.
 Currently, there exists three distinct versions of GPUDirect.  GPUDirect v1 adds accelerated communication with network and storage devices through the use of a single CPU buffer, and GPUDirect v2 provides peer-to-peer communication between discrete GPUs on a single node.  GPUDirect v3, the most recent version and what is used in this manuscript, provides support for direct RDMA between GPUs across an InfiniBand interconnect for Kepler-class GPUs. This alleviates the need for staging data to/from host memory in order to transmit data via InfiniBand between GPUs on separate nodes. 
-The networking component of GPUDirect relies on three key technologies: CUDA 5
+GPUDirect relies on three key technologies: CUDA 5
 (and up), a CUDA-enabled MPI implementation, and a Kepler-class GPU (RDMA only).
 Both MVAPICH and OpenMPI support GPUDirect.  Support for RDMA over GPUDirect is
-enabled by the MPI library, given supported hardware.
-%, and does not depend on application-level changes to a user's code.
+enabled by the MPI library, given supported hardware, and does not depend on specific application-level changes to a user's code.  However, an application needs to be written to target GPUDirect.
 In this paper, %our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA support.  We 
 we demonstrate scaling a MD simulation to 4 nodes connected via QDR InfiniBand
 and show that GPUDirect RDMA improves both scalability and overall performance
@@ -257,17 +265,17 @@ by approximately 9\% at no cost to the end user.
 \section{Experimental Setup}\label{setup}
 
 Using two molecular dynamics tools, LAMMPS\cite{plimpton2007lammps} and HOOMD~\cite{anderson2010hoomd}, we demonstrate a high performance \textit{system}.  That is, we combine PCI passthrough for Nvidia Kepler-class GPUs with QDR Infiniband SR-IOV and show that high performance molecular dynamics simulations are achievable within a virtualized environment. 
-For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads including MD simulations, but also that the latest HPC features and programming environments are also available in this same model.   
+For the first time, we also demonstrate Nvidia GPUDirect technology within such a virtual environment.  Thus, we look to not only illustrate that virtual machines provide a flexible high performance infrastructure for scaling scientific workloads, including MD simulations, but also that the latest HPC features and programming environments are available and efficient in this same model.   
 
 \subsection{Node configuration}
 
 
 
-To support the use of Nvidia GPUs and InfiniBand within a VM, specific and exact host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
+To support the use of Nvidia GPUs and InfiniBand within a VM, specific host configuration is needed. This node configuration is illustrated in Figure \ref{F:passthrough}.  While our implementation is specific to the KVM hypervisor, this setup represents a design that can be hypervisor agnostic.
 
 
-Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor, QEMU 2.1, and the \emph{vfio} driver.  Each Guest VM runs CentOS 6.4 with a stock 2.6.32-358.23.2 kernel. A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirrus VGA was emulated in the guest OS. 
-With using SR-IOV, the OFED drivers version 2.1-1.0.0 are used with Mellanox ConnectX-3 VPI adapter with firmware 2.31.5050.  The host driver initiates 4 VFs, one of which is passed through to the VM where the default OFED mlnx\_ib drivers are loaded.  
+Each node in the testbed uses CentOS 6.4 with a 3.13 upstream Linux kernel for the host OS, along with the latest KVM hypervisor, QEMU 2.1, and the \emph{vfio} driver.  Each guest VM runs CentOS 6.4 with a stock 2.6.32-358.23.2 kernel. A Kepler GPU is passed through using PCI Passthrough and directly initiated within the VM via the Nvidia 331.20 driver and CUDA release 5.5. While this specific implementation used only a single GPU, it is also possible to include as many GPUs as one can fit within the PCI Express bus if desired. As the GPU is used by the VM, an on-board VGA device was used by the host and a standard Cirrus VGA was emulated in the guest OS. 
+OFED version 2.1-1.0.0 drivers are used with Mellanox ConnectX-3 VPI adapter with firmware 2.31.5050.  The host driver initiates 4 VFs, one of which is passed through to the VM where the default OFED mlnx\_ib drivers are loaded.  
 
 \FIGURE{!htb}
   {images/host-pci-passthrough.png}
@@ -292,7 +300,8 @@ InfiniBand adapters use a single Voltaire 4036 QDR switch with a software subnet
 manager for IPoIB functionality.   
 
 
-For these experiments, both the GPUs and InfiniBand adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.  Each guest was allocated 20 GB of RAM and a full socket of 8 cores, and pinned to NUMA node 1 to ensure optimal hardware usage. While all VMs are capable of login via the InfiniBand IPoIB setup, a 1Gb Ethernet network was used for all management and login tasks.  
+For these experiments, both the GPUs and InfiniBand adapters are attached to NUMA node 1 and both the guest VMs and the base system utilized identical software stacks.  Each guest was allocated 20 GB of RAM and a full socket of 8 cores, and pinned to NUMA node 1 to ensure optimal hardware usage. 
+%While all VMs are capable of login via the InfiniBand IPoIB setup, a 1Gb Ethernet network was used for all management and login tasks.  
 For a fair and effective comparison, we also use a native environment without any virtualization. This native environment employs the same hardware configuration, and like the Guest OS runs CentOS 6.4 with the stock 2.6.32-358.23.2 kernel. 
 %Our test environment is composed of 4 servers each with a single Nvidia Kepler-class GPU.  Two servers are equipped with K20 GPUs, while the other two servers are equipped with K40 GPUs, demonstrating the potenti
 %In order to effectively test MD simulations in LAMMPS and HOOMD beyond single-node tests, ronment.  Bespin includes 4 blades, each with 2 Intel Xeron E5-2670 CPUs, 48Gb DDR3 memory, Mellanox ConnectX3 QDR InfiniBand cards, and a mixture of Nvidia Kepler series K20 and K40 GPUs.  While the effective experimental hardware allocation remains relatively low compared to production runs of either application, it does allow for a useful evaluation at a larger scale than preivously evaluated as well as a valued extrapolation to larger resources.
@@ -300,7 +309,9 @@ For a fair and effective comparison, we also use a native environment without an
  
 \section{Results}\label{results}
 
-In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. Specifically, we scale each application to 32 cores and 4 GPUs, both in a native bare-metal and virtualized environments.  Each application set was run 10 times, with the results averaged accordingly. 
+In this section, we discuss the performance of both the LAMMPS and HOOMD molecular dynamics simulation tools when running within a virtualized environment. 
+%Specifically, we scale each application to 4 nodes4 GPUs, both in a native bare-metal and virtualized environments.  
+Each application set was run 10 times, with the results averaged accordingly. 
 
 \subsection{LAMMPS}
 
@@ -318,8 +329,10 @@ In this section, we discuss the performance of both the LAMMPS and HOOMD molecul
   {F:lammps-rhodo}
 
 
-Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, and a 8:1 core to GPU mapping.  With the LAMMPS GPU implementation, a delicate balance between GPUs and CPUs is required to find the optimal ratio for fastest computation, however here we just look at the two most obvious choices. With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity provided with multi-core solution.  As expected the multi-core configuration quickly offers better performance for larger problem sizes, achieving roughly twice the performance with all 32 available cores. This is largely due to the availability of all 8 cores to keep the GPU running 100\% with continual computation.
- 
+Figure~\ref{F:lammps-lj} shows one of the most common LAMMPS algorithms used; the Lennard-Jones potential (LJ).  This algorithm is deployed in two main configurations - a 1:1 core to GPU mapping, and a 8:1 core to GPU mapping.  With the LAMMPS GPU implementation, a delicate balance between GPUs and CPUs is required to find the optimal ratio for fastest computation, however here we just look at the two most obvious choices. With small problem sizes, the 1:1 mapping outperforms the more complex core deployment, as the problem does not require the additional complexity provided with a multi-core solution.  As expected the multi-core configuration quickly offers better performance for larger problem sizes, achieving roughly twice the performance with all 32 available cores. 
+%This is largely due to the availability of all 8 cores to keep the GPU running 100\% with continual computation.
+This is largely due to the availability of all 8 cores to keep the GPU fully utilized.
+
 The important factor for this manuscript is the relative performance of the virtualized environment. From the results, it is clear the VM solution performs very well compared to the best-case native deployment. For the multi-core configuration across all problem sizes, the virtualized deployment averaged 98.5\% efficiency compared to native. The single core per GPU deployment reported better-than native performance at 100\% native.  This is likely due to caching effects, but further investigation is needed to fully identify this occurrence. 
 
  %and the Rhodopsin protein in solvated lipid bilayer benchmark (Rhodo), both running with the GPU package across 8 cores per GPU. Here we see that both benchmarks scale remarkably well in the virtualized KVM guest environment. 
@@ -329,7 +342,7 @@ Another common LAMMPS algorithm, the Rhodopsin protein in solvated lipid bilayer
 
 
 
-Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% efficiency compared to native. We also see the gap in performance decrease as the problem size increases, with the 512k problem size in yielding 99.3\% of native performance.  This finding leads us to extrapolate that a virtualized MPI+CUDA implementation could scale to a larger computational resource with similar success. 
+Again, the overhead of the virtualized configuration remains low across all configurations and problem sizes, with an average 96.4\% efficiency compared to native. We also see the gap in performance decrease as the problem size increases, with the 512k problem size yielding 99.3\% of native performance.  This finding leads us to extrapolate that a virtualized MPI+CUDA implementation could scale to a larger computational resource with similar success. 
 
 
 \subsection{HOOMD}
@@ -340,7 +353,7 @@ Again, the overhead of the virtualized configuration remains low across all conf
 % Compared to the base system's performance, we see overheads of 3.2\% and 0.6\% for the LJ and Rhodo benchmarks, respectively, when running 8 cores per GPU at experimental scale. 
 
 
-In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid simulation with 256K particles running under HOOMD.  HOOMD includes support for CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR implementation enables a further optimization by supporting RDMA for GPUDirect. From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes achieve 98.5\% of the base system's performance.  The non-GPUDirect results achieve 98.4\% efficiency at 4 nodes. These results indicate the virtualized HPC environment is able to support such complex workloads. While the effective testbed size is relatively small, it indicates that such workloads may scale equally well to hundreds or thousands of nodes. 
+In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid simulation with 256K particles running under HOOMD.  HOOMD includes support for CUDA-aware MPI implementations via GPUDirect.  The MVAPICH 2.0 GDR implementation enables a further optimization by supporting RDMA for GPUDirect. From Figure~\ref{F:HOOMD} we can see that HOOMD simulations, both with and without GPUDirect, perform very near-native.  The GPUDirect results at 4 nodes achieve 98.5\% of the base system's performance.  The non-GPUDirect results achieve 98.4\% efficiency at 4 nodes. These results indicate the virtualized HPC environment is able to support such complex workloads. While the effective testbed size is relatively small, it indicates that such workloads may scale equally well to hundreds or thousands of nodes. The advantage of using GPUDirect RDMA is also evident in \ref{F:HOOMD}, with a 9\% performance boost realized for both virtualized and non-virtualized experiments. 
 
 \FIGURE{!htb}
   {images/hoomd.png}
@@ -351,13 +364,13 @@ In Figure~\ref{F:HOOMD} we show the performance of a Lennard-Jones liquid simula
 
 \section{Discussion}\label{discussion}
 
-From the results, we see the potential for running HPC applications in a virtualized environment using GPUs and InfiniBand interconnect fabric. Across all LAMMPS runs with ranging core configurations, we found only a 1.9\% overhead between the KVM virtualized environment and native. For HOOMD, we found a similar 1.5\% overhead, both with and without GPU Direct. These results go against conventional wisdom that HPC workloads do not work in VMs. In fact, we show two N-Body type simulations programmed in an MPI+CUDA implementation perform at roughly near-native performance in tuned KVM virtual machines.  
+From the results, we see the potential for running HPC applications in a virtualized environment using GPUs and InfiniBand interconnect fabric. Across all LAMMPS runs, we found only a 1.9\% overhead between the KVM virtualized environment and native. For HOOMD, we found a similar 1.5\% overhead, both with and without GPU Direct. These results go against conventional wisdom that HPC workloads perform poorly in VMs. In fact, we show two N-Body type simulations programmed in an MPI+CUDA implementation perform at roughly near-native performance in tuned KVM virtual machines.  
 
 With HOOMD, we see how GPUDirect RDMA shows a clear advantage over the
 non-GPUDirect implementation, achieving a 9\% performance boost in both the
 native a virtualized experiments.  While GPUDirect's performance impact has been well evaluated previously \cite{GPUDirect}, it is the author's belief that this manuscript represents the first time GPUDirect has has been utilized in a virtualized environment.  
 
-Another interesting finding of running LAMMPS and HOOMD in a virtualized environment is as workload scales from a single node to 32 cores, the overhead does not increase. These results lend credence to the notion that this solution would also work for a much larger deployment, assuming system jitter can be minimized \cite{Seelam2010}. Specifically, it would be possible to expand such computational problems to a larger deployment in FutureGrid \cite{fox2013futuregrid}, Chameleon Cloud \cite{www-chameleon}, or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results help support the theory that a majority of HPC computations can be supported in virtualized environment with minimal overhead. 
+Another interesting finding of running LAMMPS in a virtualized environment is as workload scales from a single node to 32 cores, the overhead does not increase. These results lend credence to the notion that this solution would also work for a much larger deployment, assuming system jitter can be minimized \cite{Seelam2010}. Specifically, it would be possible to expand such computational problems to a larger deployment in FutureGrid \cite{fox2013futuregrid}, Chameleon Cloud \cite{www-chameleon}, or even the planned NSF Comet machine at SDSC, scheduled to provide up to 2 Petaflops of computational power. Effectively, these results provide evidence that a majority of HPC computations can be supported in virtualized environment with minimal overhead. 
 
 
 \section{Conclusion}\label{conclusion}
