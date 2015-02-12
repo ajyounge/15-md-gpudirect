@@ -240,13 +240,22 @@ Recently SR-IOV support for InfiniBand has been added by Mellanox in the Connect
 \subsection{GPUDirect}
 NVIDIA's GPUDirect technology was introduced to reduce the overhead of data movement across GPUs~\cite{GPUDirect, shainer2011development}.  
 %GPUDirect supports both networking as well as peer-to-peer interfaces for single node multi-GPU systems.  The most recent implementation of GPUDirect, version 3, adds support for RDMA over InfiniBand for Kepler-class GPUs.
-Currently, there exists three distinct versions of GPUDirect.  GPUDirect v1 adds accelerated communication with network and storage devices through the use of a single CPU buffer, and GPUDirect v2 provides peer-to-peer communication between discrete GPUs on a single node.  GPUDirect v3, the most recent version and what is used in this manuscript, provides support for direct RDMA between GPUs across an InfiniBand interconnect for Kepler-class GPUs. This alleviates the need for staging data to/from host memory in order to transmit data via InfiniBand between GPUs on separate nodes. 
+Currently, there exists three distinct versions of GPUDirect.  GPUDirect v1 adds
+accelerated communication with network and storage devices through the use of a
+single CPU buffer, and GPUDirect v2 provides peer-to-peer communication between
+discrete GPUs on a single node.  GPUDirect v3, the most recent version and what
+is used in this manuscript, provides support for direct RDMA between GPUs across
+an InfiniBand interconnect for Kepler-class GPUs. This alleviates the need for
+staging data to/from host memory in order to transmit data via InfiniBand
+between GPUs on separate nodes, although it does require application code to
+target GPUDirect.
+ 
 GPUDirect relies on three key technologies: CUDA 5
 (and up), a CUDA-enabled MPI implementation, and a Kepler-class GPU (RDMA only).
 Both MVAPICH and OpenMPI support GPUDirect.  Support for RDMA over GPUDirect is
-enabled by the MPI library, given supported hardware, and does not depend on specific application-level changes to a user's code.  However, an application needs to be written to target GPUDirect.
-In this paper, %our GPUDirect work focuses on GPUDirect v3 for multi-node RDMA support.  We 
-we demonstrate scaling a MD simulation to 4 nodes connected via QDR InfiniBand
+enabled by the MPI library, given supported hardware, without requiring changes
+to the MPI calls.
+In this paper, we demonstrate scaling a MD simulation to 4 nodes connected via QDR InfiniBand
 and show that GPUDirect RDMA improves both scalability and overall performance
 by approximately 9\% at no cost to the end user.
 
