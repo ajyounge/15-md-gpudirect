@@ -122,7 +122,9 @@ By using KVM virtual machines that leverage both Nvidia GPUs and InfiniBand, we 
 
 \section{Introduction}
 
-At present, we inevitably stand at the intersection between High Performance Computing (HPC) and clouds. Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. There is a growing effort to support advanced scientific computing using virtualized infrastructure which can be seen by a variety of new efforts, including the Comet resource within XSEDE at San Diego Supercomputer Center \cite{moore2014gateways}.  
+The cloud computing paradigm has become pervasive for commodity computing, but has not yet become widely accepted in the High Performance Computing (HPC) community.
+%At present, we inevitably stand at the intersection between High Performance Computing (HPC) and clouds. 
+Various platform tools such as Hadoop and MapReduce, among others, have already percolated into data intensive computing within HPC~\cite{jha2014apache}.  In addition, there are efforts to support traditional HPC-centric scientific computing applications in virtualized cloud infrastructure.  There are a multitude of reasons for supporting parallel computation in the cloud\cite{Armbrust2010}, including features such as dynamic scalability, specialized operating environments, simple management interfaces, fault tolerance, and enhanced quality of service, to name a few. There is a growing effort to support advanced scientific computing using virtualized infrastructure which can be seen by a variety of new efforts, including the Comet resource within XSEDE at San Diego Supercomputer Center \cite{moore2014gateways}.  
 
 Nevertheless, there exists a past notion that virtualization used in 
 cloud infrastructure is inherently inefficient.  Historically, cloud
@@ -397,10 +399,9 @@ Another interesting finding of running LAMMPS in a virtualized environment is th
 
 \section{Conclusion}\label{conclusion}
 The ability to run large-scale parallel scientific applications in the cloud has become possible, but historically has been limited by both performance concerns and infrastructure availability.
-In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications, such as molecular dynamics simulations, run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPS and HOOMD, respectively. Moving forward, we show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  Effectively, we look to pave the way for large-scale virtualized cloud infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  Our efforts leverage these technologies and provide them in an open source Infrastructure-as-a-Service framework using OpenStack.  
-
-
-
+In this work we show that advanced HPC-oriented hardware such as the latest Nvidia GPUs and InfiniBand fabric are now available within a virtualized infrastructure. Our results find MPI + CUDA applications, such as molecular dynamics simulations, run at near-native performance compared to traditional non-virtualized HPC infrastructure, with just an averaged 1.9\% and 1.5\% overhead for LAMMPS and HOOMD, respectively. We also show the utility of GPUDirect RDMA for the first time in a cloud environment with HOOMD.  
+%Effectively, we look to pave the way for large-scale virtualized cloud infrastructure to support a wide array of advanced scientific computation commonly found running on many supercomputers today.  
+The support of these workloads coalesce to provide an open source Infrastructure-as-a-Service framework using OpenStack.  Our future efforts wll be twofold. We first hope to increase the scale to sigificantly larger cloud infrastructure on a new experimental system and confirm near-native performance is acheivable in a virtualized environment. We also look to expand the workload diversity and support many other HPC and big data applications running efficiently in virtual clusters.
 %The tight and exact integration into an open source cloud IaaS framework such as OpenStack \cite{www-openstack} becomes critical.
 
 %* Multi-node virtualized MD at low overhead \\
