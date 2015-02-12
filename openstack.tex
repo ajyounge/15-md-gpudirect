@@ -17,19 +17,19 @@ While OpenStack supports services for networking (Neutron), compute (Nova), iden
 (Keystone), storage (Cinder, Swift), and others, our work focuses entirely
 on the compute service.  
 
-Scheduling is implemented at two levels: the cloud-level and the node-level.  In
-our earlier work, we have developed a cloud-level heterogeneous scheduler for OpenStack that 
+Scheduling is implemented at two levels: the cloud level and the node level.  In
+our earlier work, we have developed a cloud level heterogeneous scheduler for OpenStack that 
 allows scheduling based on architectures and
-resources~\cite{crago2011heterogeneous}.  In this model, the cloud-level
+resources~\cite{crago2011heterogeneous}.  In this model, the cloud level
 scheduler dispatches jobs to nodes based on resource requirements (e.g. Kepler
-GPU) and node-level resource availability.
+GPU) and node level resource availability.
 
 At the node, a second level of scheduling occurs to ensure that resources are
 tracked and not over-committed.  Unlike traditional cloud paradigms, devices
 passed into VMs cannot be over-committed.  We treat devices, whether GPUs or
 InfiniBand virtual functions, as schedulable resources.  Thus, it is the responsibility of the
 individual node to track resources committed and report availability to the
-cloud-level scheduler.  For reporting, we augment OpenStack's
+cloud level scheduler.  For reporting, we augment OpenStack's
 existing reporting mechanism to provide a low overhead solution.
 
 
